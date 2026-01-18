@@ -51,13 +51,31 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 1. Update the Deployment (Force pull new image)
-            # We assume you have a 'deployment.yaml' applied on the server.
-            # If not, we can apply it right here.
+            # 1. Create directory if missing
+            mkdir -p k8s
             
-            echo "Restarting K3s Deployments..."
+            # 2. We need to get the new YAML files onto the server. 
+            # Ideally, we git clone. For simplicity, we can just pull the images 
+            # and use a one-liner to update, OR simpler:
+            # We will use 'kubectl' to apply from the repo if we clone it, 
+            # BUT simplest for Phase 1: 
+            # Just force a restart for now, assuming you copied the YAMLs once.
+            
+            # actually, let's do this properly:
+            # Clone/Pull the latest code on the server to get the YAMLs
+            if [ -d "money-manager" ]; then
+              cd money-manager
+              git pull origin main
+            else
+              # You need to use a Personal Access Token (PAT) for private repos
+              # For now, let's assume we just update images:
+              echo "Skipping git pull (complex auth). Updating images..."
+            fi
+
+            # Force update images
+            kubectl set image deployment/money-backend backend=${{ env.DOCKER_USER }}/${{ env.BACKEND_IMAGE }}:latest
+            kubectl set image deployment/money-frontend frontend=${{ env.DOCKER_USER }}/${{ env.FRONTEND_IMAGE }}:latest
+            
+            # Restart to pick up changes
             kubectl rollout restart deployment/money-backend
             kubectl rollout restart deployment/money-frontend
-            
-            # Verify
-            kubectl get pods

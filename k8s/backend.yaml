@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: money-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: money-backend
+  template:
+    metadata:
+      labels:
+        app: money-backend
+    spec:
+      containers:
+      - name: backend
+        image: abhi7dev/money-manager-backend:latest 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST
+          value: "money-manager-db.cjcgc2kqe471.ap-south-1.rds.amazonaws.com" # Get this from Terraform output!
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: password
+        - name: DB_NAME
+          value: "moneymanager"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: money-backend-service
+spec:
+  selector:
+    app: money-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
