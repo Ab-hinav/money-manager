@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Money Manager - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#24868f",
+                        "background-light": "#f7f8f8",
+                        "background-dark": "#1a1c1e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#101819] dark:text-white antialiased">
+<!-- Global Wrapper -->
+<div class="relative flex min-h-screen w-full flex-col justify-center items-center overflow-hidden p-4">
+<!-- Decorative Background Pattern (Subtle) -->
+<div class="absolute inset-0 -z-10 h-full w-full bg-background-light dark:bg-background-dark">
+<div class="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+</div>
+<!-- Login Card -->
+<div class="w-full max-w-[440px] bg-white dark:bg-[#25282a] rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#e9f1f1] dark:border-[#333] p-8 md:p-10 relative overflow-hidden">
+<!-- Top Color Accent -->
+<div class="absolute top-0 left-0 w-full h-1.5 bg-primary"></div>
+<!-- Header Section -->
+<div class="flex flex-col items-center gap-4 mb-8">
+<!-- Logo -->
+<div class="flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary mb-2">
+<span class="material-symbols-outlined text-3xl">account_balance_wallet</span>
+</div>
+<div class="text-center">
+<h1 class="text-2xl font-bold tracking-tight text-[#101819] dark:text-white mb-2">Welcome Back</h1>
+<p class="text-[#578a8e] text-sm font-medium">Please sign in to manage your finances.</p>
+</div>
+</div>
+<!-- Form Section -->
+<form action="#" class="flex flex-col gap-5">
+<!-- Email Field -->
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-[#101819] dark:text-gray-200" for="email">Email Address</label>
+<div class="relative group">
+<span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#578a8e] group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</span>
+<input class="w-full rounded-lg border border-[#d3e2e4] dark:border-[#444] bg-[#f9fbfb] dark:bg-[#2d3032] py-3 pl-10 pr-4 text-sm text-[#101819] dark:text-white placeholder:text-[#9aabb0] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" id="email" placeholder="name@example.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center">
+<label class="text-sm font-semibold text-[#101819] dark:text-gray-200" for="password">Password</label>
+<a class="text-xs font-medium text-[#578a8e] hover:text-primary transition-colors" href="#">Forgot Password?</a>
+</div>
+<div class="relative group">
+<span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#578a8e] group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</span>
+<input class="w-full rounded-lg border border-[#d3e2e4] dark:border-[#444] bg-[#f9fbfb] dark:bg-[#2d3032] py-3 pl-10 pr-4 text-sm text-[#101819] dark:text-white placeholder:text-[#9aabb0] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" id="password" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 px-4 text-sm font-bold text-white shadow-sm hover:bg-[#1d6f77] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors" type="button">
+                    Login
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Section -->
+<div class="mt-8 flex items-center justify-center gap-2 text-center text-sm">
+<span class="text-[#578a8e]">Don't have an account?</span>
+<a class="font-bold text-primary hover:text-[#1d6f77] transition-colors" href="#">Create an account</a>
+</div>
+<!-- Security Badge (Trust Signal) -->
+<div class="mt-8 flex items-center justify-center gap-1.5 opacity-60">
+<span class="material-symbols-outlined text-[14px] text-[#578a8e]">lock_open</span>
+<p class="text-[10px] uppercase tracking-wider font-semibold text-[#578a8e]">256-Bit SSL Encrypted</p>
+</div>
+</div>
+<!-- Bottom Links -->
+<div class="mt-6 flex gap-6 text-xs text-[#578a8e]">
+<a class="hover:text-primary hover:underline" href="#">Privacy Policy</a>
+<a class="hover:text-primary hover:underline" href="#">Terms of Service</a>
+<a class="hover:text-primary hover:underline" href="#">Help Center</a>
+</div>
+</div>
+</body></html>

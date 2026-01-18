@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Financial Pulse Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#24868f",
+                        "background-light": "#f7f8f8",
+                        "background-dark": "#1a1c1e",
+                        "text-main": "#101819",
+                        "text-sub": "#578a8e",
+                        "success": "#34A853",
+                        "danger": "#DE425B",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'float': '0 10px 30px -5px rgba(36, 134, 143, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for the list */
+        .scroller::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scroller::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scroller::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased min-h-screen flex items-center justify-center p-4 lg:p-8">
+<!-- Main Mobile Container (Centered on Desktop) -->
+<main class="w-full max-w-[440px] h-[850px] max-h-[90vh] bg-[#ffffff] dark:bg-[#1e2022] rounded-[32px] shadow-2xl overflow-hidden flex flex-col relative border border-gray-100 dark:border-gray-800">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-5 shrink-0 z-10 bg-white/80 dark:bg-[#1e2022]/80 backdrop-blur-md sticky top-0">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+<h2 class="text-text-main dark:text-white text-lg font-bold tracking-tight">Money Manager</h2>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-text-main dark:text-gray-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">settings</span>
+</button>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto scroller px-6 pb-24">
+<!-- Hero Card -->
+<div class="mt-2 mb-8">
+<div class="bg-white dark:bg-[#25282a] rounded-2xl p-6 shadow-soft border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
+<!-- Decor background blobs -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all duration-500"></div>
+<div class="absolute bottom-0 left-0 w-24 h-24 bg-blue-400/5 rounded-full blur-2xl"></div>
+<div class="relative z-10 flex flex-col items-center text-center mb-6">
+<p class="text-text-sub text-sm font-medium mb-1">Total Balance</p>
+<h1 class="text-text-main dark:text-white text-4xl font-extrabold tracking-tight">₹1,24,000</h1>
+</div>
+<div class="relative z-10 grid grid-cols-2 gap-4 border-t border-dashed border-gray-200 dark:border-gray-700 pt-5">
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-1.5 mb-1">
+<span class="size-5 rounded-full bg-success/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-success text-[14px]">arrow_downward</span>
+</span>
+<span class="text-text-sub text-xs font-semibold uppercase tracking-wider">Income</span>
+</div>
+<p class="text-success text-lg font-bold">₹50,000</p>
+</div>
+<div class="flex flex-col items-center relative">
+<!-- Vertical Divider -->
+<div class="absolute left-0 top-1 bottom-1 w-px bg-gray-100 dark:bg-gray-700"></div>
+<div class="flex items-center gap-1.5 mb-1">
+<span class="size-5 rounded-full bg-danger/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-danger text-[14px]">arrow_upward</span>
+</span>
+<span class="text-text-sub text-xs font-semibold uppercase tracking-wider">Expense</span>
+</div>
+<p class="text-danger text-lg font-bold">₹15,000</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Transactions Section -->
+<div class="mb-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-text-main dark:text-white text-lg font-bold">Recent Transactions</h3>
+<button class="text-primary text-sm font-semibold hover:text-primary/80 transition-colors">View All</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Item 1 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-gray-50/50 dark:bg-[#25282a] hover:bg-white hover:shadow-sm dark:hover:bg-[#2c3032] border border-transparent hover:border-gray-100 dark:hover:border-gray-700 transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-[#FFE8D1] dark:bg-[#3d2e22] flex items-center justify-center shrink-0 text-orange-600 dark:text-orange-400">
+<span class="material-symbols-outlined">lunch_dining</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-main dark:text-gray-100 text-base font-semibold">McDonalds</p>
+<p class="text-text-sub text-sm">Today, 12:30 PM</p>
+</div>
+</div>
+<p class="text-text-main dark:text-gray-200 font-bold">-₹350</p>
+</div>
+<!-- Item 2 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-gray-50/50 dark:bg-[#25282a] hover:bg-white hover:shadow-sm dark:hover:bg-[#2c3032] border border-transparent hover:border-gray-100 dark:hover:border-gray-700 transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-[#E3F2FD] dark:bg-[#1a2f3d] flex items-center justify-center shrink-0 text-blue-600 dark:text-blue-400">
+<span class="material-symbols-outlined">home</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-main dark:text-gray-100 text-base font-semibold">Rent Payment</p>
+<p class="text-text-sub text-sm">Yesterday, 9:00 AM</p>
+</div>
+</div>
+<p class="text-text-main dark:text-gray-200 font-bold">-₹12,000</p>
+</div>
+<!-- Item 3: Salary -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-gray-50/50 dark:bg-[#25282a] hover:bg-white hover:shadow-sm dark:hover:bg-[#2c3032] border border-transparent hover:border-gray-100 dark:hover:border-gray-700 transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-[#E8F5E9] dark:bg-[#1e3324] flex items-center justify-center shrink-0 text-success">
+<span class="material-symbols-outlined">work</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-main dark:text-gray-100 text-base font-semibold">Salary Credited</p>
+<p class="text-text-sub text-sm">Oct 30, 2023</p>
+</div>
+</div>
+<p class="text-success font-bold">+₹85,000</p>
+</div>
+<!-- Item 4 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-gray-50/50 dark:bg-[#25282a] hover:bg-white hover:shadow-sm dark:hover:bg-[#2c3032] border border-transparent hover:border-gray-100 dark:hover:border-gray-700 transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-[#F3E5F5] dark:bg-[#342236] flex items-center justify-center shrink-0 text-purple-600 dark:text-purple-400">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-main dark:text-gray-100 text-base font-semibold">Grocery</p>
+<p class="text-text-sub text-sm">Oct 28, 2023</p>
+</div>
+</div>
+<p class="text-text-main dark:text-gray-200 font-bold">-₹2,100</p>
+</div>
+<!-- Item 5 -->
+<div class="group flex items-center justify-between p-4 rounded-xl bg-gray-50/50 dark:bg-[#25282a] hover:bg-white hover:shadow-sm dark:hover:bg-[#2c3032] border border-transparent hover:border-gray-100 dark:hover:border-gray-700 transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-[#E0F2F1] dark:bg-[#1a3331] flex items-center justify-center shrink-0 text-teal-600 dark:text-teal-400">
+<span class="material-symbols-outlined">fitness_center</span>
+</div>
+<div class="flex flex-col">
+<p class="text-text-main dark:text-gray-100 text-base font-semibold">Gym Membership</p>
+<p class="text-text-sub text-sm">Oct 26, 2023</p>
+</div>
+</div>
+<p class="text-text-main dark:text-gray-200 font-bold">-₹1,500</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="absolute bottom-8 right-6 z-20">
+<button class="size-16 rounded-full bg-primary text-white shadow-float flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group">
+<span class="material-symbols-outlined text-[32px] group-hover:rotate-90 transition-transform duration-300">add</span>
+</button>
+</div>
+<!-- Background Gradient overlay for bottom fade -->
+<div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-[#1e2022] to-transparent pointer-events-none"></div>
+</main>
+</body></html>

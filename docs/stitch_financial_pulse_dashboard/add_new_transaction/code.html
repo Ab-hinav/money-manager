@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New Transaction</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#24868f",
+                        "background-light": "#f7f8f8",
+                        "background-dark": "#1a1c1e",
+                        "expense": "#ef4444", // Red for expense
+                        "income": "#10b981",  // Green for income
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(36, 134, 143, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased min-h-screen flex items-center justify-center p-4">
+<!-- Main Card Container -->
+<div class="relative w-full max-w-[500px] bg-white dark:bg-[#1e2022] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+<!-- Header & Toggle -->
+<div class="px-6 pt-6 pb-2 shrink-0">
+<div class="flex justify-between items-center mb-6">
+<h1 class="text-xl font-bold tracking-tight">Add Transaction</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Custom Segmented Control -->
+<div class="bg-gray-100 dark:bg-[#2c2e30] p-1.5 rounded-2xl flex relative h-14">
+<!-- Active Indicator (Simulated logic for design purposes, realistically JS would move this) -->
+<!-- We will simulate "Expense" is active by styling the label directly -->
+<label class="flex-1 relative cursor-pointer group">
+<input checked="" class="peer sr-only" name="type" type="radio" value="expense"/>
+<div class="w-full h-full rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-all text-gray-500 dark:text-gray-400 peer-checked:bg-white peer-checked:text-expense peer-checked:shadow-sm dark:peer-checked:bg-[#3a3d40] dark:peer-checked:text-red-400">
+<span class="material-symbols-outlined text-[20px] filled">arrow_downward</span>
+                        Expense
+                    </div>
+</label>
+<label class="flex-1 relative cursor-pointer group">
+<input class="peer sr-only" name="type" type="radio" value="income"/>
+<div class="w-full h-full rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-all text-gray-500 dark:text-gray-400 peer-checked:bg-white peer-checked:text-income peer-checked:shadow-sm dark:peer-checked:bg-[#3a3d40] dark:peer-checked:text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+                        Income
+                    </div>
+</label>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="overflow-y-auto flex-1 no-scrollbar">
+<!-- Amount Input -->
+<div class="py-8 px-6 flex flex-col items-center justify-center">
+<label class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2" for="amount">Enter Amount</label>
+<div class="relative flex items-center justify-center w-full">
+<span class="text-4xl text-gray-400 mr-1 font-bold">₹</span>
+<!-- Auto-focused input, strictly styled to look like display text -->
+<input autofocus="" class="w-full text-center bg-transparent border-none p-0 text-6xl font-extrabold text-slate-900 dark:text-white focus:ring-0 placeholder:text-gray-200 dark:placeholder:text-gray-700 caret-primary" id="amount" placeholder="0" type="text"/>
+</div>
+</div>
+<!-- Categories -->
+<div class="px-6 pb-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold text-gray-800 dark:text-gray-200">Select Category</h3>
+<button class="text-xs font-semibold text-primary hover:text-primary/80">Edit</button>
+</div>
+<div class="grid grid-cols-4 gap-y-6 gap-x-2">
+<!-- Active Item -->
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input checked="" class="sr-only peer" name="category" type="radio" value="food"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-white border-2 border-transparent text-gray-500 shadow-sm peer-checked:bg-primary peer-checked:text-white peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-50 dark:bg-[#2c2e30] dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">restaurant</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Food</span>
+</label>
+<!-- Inactive Items -->
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="travel"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">flight</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Travel</span>
+</label>
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="rent"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">cottage</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Rent</span>
+</label>
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="bills"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">receipt_long</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Bills</span>
+</label>
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="entertainment"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">movie</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Fun</span>
+</label>
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="health"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">cardiology</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Health</span>
+</label>
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="shopping"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">shopping_bag</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">Shop</span>
+</label>
+<label class="group flex flex-col items-center gap-2 cursor-pointer">
+<input class="sr-only peer" name="category" type="radio" value="more"/>
+<div class="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 bg-gray-50 border border-gray-100 text-gray-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-transparent peer-checked:shadow-glow peer-checked:scale-110 group-hover:bg-gray-100 group-hover:border-gray-200 dark:bg-[#2c2e30] dark:border-gray-700 dark:text-gray-400 dark:group-hover:bg-[#36393b]">
+<span class="material-symbols-outlined text-[28px]">grid_view</span>
+</div>
+<span class="text-[11px] font-semibold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors peer-checked:text-primary peer-checked:font-bold">More</span>
+</label>
+</div>
+</div>
+<!-- Additional Inputs -->
+<div class="px-6 pb-6 space-y-3">
+<!-- Date Input -->
+<div class="flex items-center bg-gray-50 dark:bg-[#2c2e30] rounded-xl px-4 py-3 border border-transparent focus-within:border-gray-300 dark:focus-within:border-gray-600 transition-colors">
+<div class="text-gray-400 dark:text-gray-500 flex items-center justify-center mr-3">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div class="flex-1">
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400" for="date">Date</label>
+<input class="w-full bg-transparent border-none p-0 text-sm font-semibold text-gray-800 dark:text-white focus:ring-0 cursor-pointer" id="date" type="text" value="Today, 24 Oct"/>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-sm">chevron_right</span>
+</div>
+<!-- Note Input -->
+<div class="flex items-center bg-gray-50 dark:bg-[#2c2e30] rounded-xl px-4 py-3 border border-transparent focus-within:border-gray-300 dark:focus-within:border-gray-600 transition-colors">
+<div class="text-gray-400 dark:text-gray-500 flex items-center justify-center mr-3">
+<span class="material-symbols-outlined">edit_note</span>
+</div>
+<div class="flex-1">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium text-gray-800 dark:text-white focus:ring-0 placeholder:text-gray-400" placeholder="Add a note..." type="text"/>
+</div>
+</div>
+<!-- Attachment Option (Optional Polish) -->
+<div class="flex items-center justify-center p-2">
+<button class="text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center gap-2 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">add_a_photo</span>
+                        Add Receipt
+                    </button>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="p-6 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1e2022] z-10">
+<button class="w-full py-4 rounded-xl bg-primary hover:bg-teal-700 active:scale-[0.98] transition-all text-white font-bold text-lg shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+<span>Save Transaction</span>
+<span class="material-symbols-outlined">check</span>
+</button>
+</div>
+</div>
+</body></html>
