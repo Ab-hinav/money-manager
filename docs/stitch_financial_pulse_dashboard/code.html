@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Income Transaction</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36bf8d",
+                        "primary-dark": "#2a9d73",
+                        "background-light": "#f5f5f7",
+                        "background-dark": "#1a1a1a",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#242424",
+                        "input-bg-light": "#f4f6f5",
+                        "input-bg-dark": "#2a2a2a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 20px 40px -10px rgba(0, 0, 0, 0.08)',
+                        'inner-light': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e1e4e3; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d1d4d3; 
+        }
+        
+        /* Hide number input spinners */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display flex items-center justify-center p-4 sm:p-6 text-[#101916] dark:text-white overflow-hidden transition-colors duration-300">
+<!-- Main Card Container (Desktop centered modal feel) -->
+<div class="w-full max-w-[500px] h-[90vh] max-h-[850px] bg-surface-light dark:bg-surface-dark rounded-[2.5rem] shadow-soft flex flex-col relative overflow-hidden border border-white/50 dark:border-white/5">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 pt-6 pb-4 shrink-0 z-10">
+<button class="size-10 flex items-center justify-center rounded-full bg-transparent hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[28px]">close</span>
+</button>
+<h2 class="text-lg font-bold tracking-tight">Add Transaction</h2>
+<button class="size-10 flex items-center justify-center rounded-full bg-transparent hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 dark:text-gray-400 opacity-0 pointer-events-none">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</header>
+<!-- Main Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-6 pb-24">
+<!-- Segmented Control -->
+<div class="bg-input-bg-light dark:bg-input-bg-dark p-1.5 rounded-2xl flex relative mb-8">
+<button class="flex-1 py-2.5 rounded-xl text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors relative z-10">
+                    Expense
+                </button>
+<button class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-primary shadow-sm transition-all relative z-10">
+                    Income
+                </button>
+</div>
+<!-- Amount Display -->
+<div class="flex flex-col items-center justify-center mb-10 group">
+<label class="text-xs font-semibold text-primary uppercase tracking-wider mb-2 opacity-80">Total Amount</label>
+<div class="flex items-baseline relative">
+<span class="text-4xl text-primary font-bold mr-2">₹</span>
+<input class="text-6xl font-extrabold text-primary bg-transparent border-none text-center p-0 w-[280px] focus:ring-0 placeholder-primary/30 outline-none selection:bg-primary/20 caret-primary" inputmode="numeric" placeholder="0" type="text" value="45,000"/>
+</div>
+<!-- Underline decoration -->
+<div class="h-1 w-16 bg-primary/20 rounded-full mt-2 group-focus-within:bg-primary group-focus-within:w-32 transition-all duration-500"></div>
+</div>
+<!-- Category Section -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-bold text-gray-800 dark:text-gray-100">Category</h3>
+<button class="text-xs font-semibold text-primary hover:text-primary-dark">See all</button>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<!-- Category Item: Salary (Active) -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="size-16 rounded-2xl bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center transition-transform transform group-hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-[28px]">work</span>
+</div>
+<span class="text-xs font-semibold text-primary">Salary</span>
+</div>
+<!-- Category Item: Business -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">storefront</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Business</span>
+</div>
+<!-- Category Item: Gifts -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">redeem</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Gifts</span>
+</div>
+<!-- Category Item: Investment -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">trending_up</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Invest</span>
+</div>
+<!-- Row 2 -->
+<!-- Category Item: Rental -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity mt-2">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">home_work</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Rental</span>
+</div>
+<!-- Category Item: Dividends -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity mt-2">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">pie_chart</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Dividends</span>
+</div>
+<!-- Category Item: Refund -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity mt-2">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">currency_exchange</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Refund</span>
+</div>
+<!-- Category Item: Other -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 transition-opacity mt-2">
+<div class="size-16 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark text-gray-600 dark:text-gray-300 flex items-center justify-center border border-transparent group-hover:border-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[28px]">more_horiz</span>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Other</span>
+</div>
+</div>
+</div>
+<!-- Details Inputs -->
+<div class="space-y-4">
+<!-- Date Picker -->
+<div class="group flex items-center gap-4 p-4 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark border border-transparent focus-within:border-primary/30 transition-all cursor-pointer">
+<div class="size-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+</div>
+<div class="flex-1 flex flex-col">
+<label class="text-[10px] font-bold uppercase tracking-wide text-gray-400 dark:text-gray-500">Date</label>
+<input class="bg-transparent border-none p-0 text-sm font-semibold text-gray-800 dark:text-gray-200 focus:ring-0 cursor-pointer" readonly="" type="text" value="Today, 24 Oct"/>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-sm">chevron_right</span>
+</div>
+<!-- Note Input -->
+<div class="group flex items-center gap-4 p-4 rounded-2xl bg-input-bg-light dark:bg-input-bg-dark border border-transparent focus-within:border-primary/30 transition-all">
+<div class="size-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+</div>
+<div class="flex-1 flex flex-col">
+<label class="text-[10px] font-bold uppercase tracking-wide text-gray-400 dark:text-gray-500">Note</label>
+<input class="bg-transparent border-none p-0 text-sm font-medium text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:ring-0 w-full" placeholder="Add a description..." type="text"/>
+</div>
+</div>
+<!-- Receipt Attachment (Extra delight feature) -->
+<div class="group flex items-center justify-center gap-2 p-3 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-gray-400 text-[20px] group-hover:text-primary">attach_file</span>
+<span class="text-sm font-medium text-gray-500 group-hover:text-primary">Attach Receipt</span>
+</div>
+</div>
+</div>
+<!-- Footer / Action Button -->
+<div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-surface-light via-surface-light to-transparent dark:from-surface-dark dark:via-surface-dark pointer-events-none">
+<button class="pointer-events-auto w-full h-14 bg-primary hover:bg-primary-dark active:scale-[0.98] transition-all rounded-xl text-white font-bold text-base shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+<span>Save Income</span>
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+</div>
+</div>
+</body></html>
