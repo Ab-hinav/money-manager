@@ -1,0 +1,226 @@
+Product Requirements Document (PRD): Money Manager App
+
+-----1. Introduction and Overview
+Field
+Value
+Product Name
+Money Manager
+Document Version
+1.0 (Draft)
+Date
+18-Jan-26
+Product Manager/Owner
+Abhinav Singh
+Purpose
+To define the requirements for a comprehensive financial management application that provides users and organizations with a clear view of their expenses, savings, and overall financial health. This document will serve as the primary source of truth for development, a reference point for tracking tasks, and a learning aid for the creator.
+
+2. Goals and Objectives
+
+The primary goal of the Money Manager app is to empower users and organizations to achieve better financial control and awareness.
+Financial Clarity: Provide a clear, real-time visualization of all financial activities (income, expenses, savings).
+Effective Tracking: Allow for easy and accurate logging and categorization of expenses and income.
+Progress Reference: Create a single reference point for the entire project lifecycle, including tasks completed and future plans, ensuring all stakeholders (including LLMs like Gemini and Stich) are "on the same page."
+Learning & Hands-On Experience: Serve as a project to help the creator learn and gain hands-on experience with the chosen technology stack.
+3. Target Audience
+Individual Users: People seeking to track personal spending, set budgets, and manage savings goals.
+Organizations (Small to Medium): Entities needing a simple, clear tool to monitor organizational expenses, manage department budgets, and track overall cash flow.
+
+
+
+4. Core Features
+Feature Area
+Description
+Acceptance Criteria (Draft)
+Expense Tracking
+Users can log and categorize individual expenses (e.g., Groceries, Rent, Utilities, Travel).
+Must support custom categories and recurring expense entries.
+Income Tracking
+Users can log various sources of income.
+Must support recurring income entries (e.g., Salary).
+Account Management
+Users can create and manage multiple financial accounts (e.g., Bank Account, Credit Card, Cash).
+Must support initial balance input and balance updates based on transactions.
+Savings View/Goals
+Provide a clear view of total savings and allow users to set and track progress toward specific savings goals.
+Must show a visual progress bar for each goal and calculate time to completion based on current input/savings rate.
+Dashboard/Reporting
+Offer an overview dashboard with key metrics and visualization (charts, graphs) of spending trends and savings rate.
+Must include a monthly expense breakdown chart and a net-worth/balance trend line.
+Organization Support
+Allow organizational users to assign expenses to specific projects, departments, or cost centers.
+Must support role-based access for different organizational members (e.g., admin, standard user).
+
+5. Technical Specification and Architecture
+
+This section documents the foundational technology choices to guide the development team.
+Layer
+Technology/Service
+Details
+Frontend
+Next.js
+Chosen for performance, SEO benefits (if applicable), and developer experience.
+Backend
+GoLang
+Chosen for its performance, concurrency support, and efficiency for a high-traffic transaction system.
+Database (DB)
+Postgres
+Chosen for its reliability, transactional integrity, and advanced features.
+Cloud Infrastructure
+AWS (Amazon Web Services)
+The primary cloud provider for hosting all application services.
+Container Orchestration
+Kubernetes (K8s)
+Will be used minimally initially, only for required services to maintain a lean infrastructure footprint.
+DB Deployment
+Initial consideration: Postgres could be hosted on the same EC2 instance as storage. Alternative consideration: Explore managed database services on AWS or separate EC2 hosting for better scalability and separation of concerns.
+
+
+
+6. Scope and Future Plans (Reference Point)
+
+This section serves as a dynamic log of project progress and future direction.
+Item
+Status/Priority
+Description
+Phase 1: Core App
+ In Scope (High)
+Implement core features (Expense/Income/Account Management, basic Dashboard).
+User Authentication
+ In Scope (High)
+Implement secure user registration and login.
+Budgeting Feature
+ Phase 2 (Medium)
+Allow users to create monthly or category-specific budgets and receive alerts when limits are approached or exceeded.
+External Integrations
+ Phase 3 (Low)
+Integrate with third-party services (e.g., bank feed APIs for automatic transaction import).
+Reporting Exports
+ Phase 2 (Medium)
+Allow users/orgs to export reports (PDF, CSV) of their financial data.
+
+
+
+
+Here are the detailed goals and expectations for Phase 1: Core App development, focused on establishing the Minimum Viable Product (MVP) and the foundational technology stack.Phase 1: Goals and Expectations
+
+The primary expectation for Phase 1 is the delivery of a fully functional, end-to-end core financial tracking application that is stable and ready for internal testing.
+
+1. Core Feature Implementation (Functional Goals)
+User Authentication & Authorization:
+Goal: Implement a secure registration, login, and session management system.
+Expectation: Users must be able to securely create an account and log in. All core feature access must be behind this authentication layer.
+Transaction Logging (Expense & Income):
+Goal: Enable users to quickly and accurately log both income and expenses.
+Expectation: The application must support manual entry of: Amount, Date, Description, Category (must be customizable), and an associated Account. Recurring transactions must also be supported.
+Account Management:
+Goal: Allow users to manage their different money sources.
+Expectation: Users must be able to create, name, and set an initial balance for multiple accounts (e.g., Bank, Credit Card, Cash). Transaction logging must correctly update the corresponding account balance.
+Dashboard & Reporting (Basic):
+Goal: Provide an immediate, clear overview of the user's financial status.
+Expectation: A basic dashboard view must be operational, displaying:
+Total Net Worth/Current Balance across all accounts.
+Simple charts showing total income vs. total expenses for the current month.
+A breakdown of expenses by category for the current month.
+2. Technical Foundations (Non-Functional Goals)
+Technology Stack Setup:
+Goal: Establish a stable and scalable initial architecture based on the defined stack.
+Expectation: The live environment must have:
+Frontend: Next.js application hosted on AWS.
+Backend: GoLang API services running as containers.
+Database: Postgres instance provisioned and running, successfully handling transaction integrity and data persistence.
+Infrastructure (MVP Baseline):
+Goal: Deploy a lean, secure, and cost-effective infrastructure on AWS.
+Expectation: A minimal Kubernetes cluster (K8s) must be set up to host only the necessary backend services. The chosen DB Deployment strategy (either EC2-hosted Postgres or a managed service) must be finalized and implemented.
+Project Learnings:
+Goal: Successfully complete the end-to-end deployment to gain hands-on experience.
+Expectation: The creator must document lessons learned during the setup of the Next.js/GoLang interaction, database schema design, and AWS/Kubernetes deployment process. This documentation will be a continuous, internal resource.
+
+
+
+PRD Addendum: Phase 1 Technical Architecture
+Date: 18-Jan-26
+Status: Approved
+Context: MVP / Phase 1 Implementation
+1. Architecture Overview
+For Phase 1, we are adopting a 3-Tier Managed Architecture leveraging the AWS Free Tier. This balances the goal of "Learning Kubernetes" with the need for a stable, production-grade database.
+Pattern: Hybrid Cloud/Cluster (Managed Database + Self-Managed Kubernetes).
+Infrastructure Provider: AWS (Free Tier eligible).
+2. Technology Stack Decisions
+Component
+Selected Technology
+Specification/Configuration
+Frontend
+Next.js
+App Router architecture. Initially deployed via Vercel or containerized in K8s (TBD based on CI/CD preference).
+Backend
+Go (Golang)
+Monolithic architecture (initially). Uses net/http or Chi router. Packaged as a Docker container.
+Database
+AWS RDS
+PostgreSQL engine. Managed service to ensure data persistence, automated backups, and high availability.
+Orchestration
+K3s
+Lightweight Kubernetes distribution running on a single EC2 node. Replaces heavy EKS for cost efficiency.
+
+3. Infrastructure Specifications (AWS)
+A. Database Layer (The "State")
+Service: Amazon RDS (Relational Database Service).
+Instance Type: db.t3.micro (Free Tier eligible).
+Storage: 20 GB General Purpose SSD (gp2).
+Access: Private restriction. Only accessible via the Application Security Group.
+B. Compute Layer (The "Cluster")
+Service: Amazon EC2.
+Instance Type: t3.medium (Preferred for K8s stability) or t3.micro (Minimum viable).
+OS: Ubuntu 22.04 LTS.
+Role: Single-Node K3s Cluster (Acts as both Control Plane and Worker Node).
+C. Networking & Security
+Security Group (money-app-sg):
+Inbound: Allow HTTP/HTTPS (Web), SSH (Admin only), K8s API (Admin only).
+Internal: RDS allows traffic only from money-app-sg (Self-referencing rule).
+4. Decision Rationale (Why this architecture?)
+Stability vs. Learning: By moving the database out of Kubernetes and into RDS, we eliminate the risk of data loss due to pod crashes or misconfigured Persistent Volumes. We still get full Kubernetes learning value by hosting the API and Frontend in the cluster.
+Cost Optimization: The stack maximizes the AWS Free Tier (t3.micro instances) while using K3s to avoid the high control-plane costs of AWS EKS.
+Simplicity: Starting with a backend monolith avoids the complexities of distributed tracing and service mesh networking in Phase 1.
+
+
+phase 1 Architecture: The Full Stack (Frontend + Backend + Infra)
+This blueprint covers the entire flow from the user's screen to the database disk.
+1. High-Level Data Flow
+User opens the App (PWA/Mobile Web).
+Request hits AWS CloudFront (Global Edge Network) for SSL & Caching.
+Forwarded to AWS EC2 (The Single Node Cluster).
+Traefik Ingress (K3s) routes traffic based on URL:
+/ → Next.js Pod (Frontend UI).
+/api/* → Go Backend Pod (Business Logic).
+Go Backend queries AWS RDS (PostgreSQL Database).
+
+2. PRD Addendum: Frontend & Network Specifications
+Copy/Paste this into your "Technical Foundations" section:
+
+D. Frontend Layer (The "Face")
+Framework: Next.js 14+ (App Router).
+Language: TypeScript.
+Styling: Tailwind CSS (for speed) + Shadcn/UI (for pre-built accessible components like Inputs, Cards, Dialogs).
+Deployment: Containerized (Docker) and deployed as a Pod inside the K3s cluster.
+State Management: React Server Components (Server Side) + React Context (Client Side for simple auth state).
+E. Networking & Delivery (The "Pipe")
+CDN / Edge: AWS CloudFront.
+Role: Terminates SSL (HTTPS), caches static assets (JS/CSS/Images) globally, and hides the EC2 IP address.
+Cost: Free Tier eligible (1TB transfer out).
+Ingress Controller: Traefik (Built-in with K3s).
+Role: Internal routing inside the cluster. Separates UI traffic from API traffic.
+F. UI/UX Scope (Phase 1 MVP)
+Design System: Mobile-First, "Clean Fintech" aesthetic.
+Key Screens:
+Dashboard: Financial Pulse (Balance, Income/Expense summary, Recent Transactions).
+Add Transaction: Fast entry form (Amount, Category, Date).
+Login: Simple JWT-based authentication entry.
+
+Implementation Roadmap (The "Build Order")
+Now that the architecture is locked, here is our execution path:
+Infrastructure (Terraform): Spin up the Network, RDS, and EC2. (We are here).
+Backend (Go): Write the "Health Check" and "DB Connection" code. Dockerize it.
+Frontend (Next.js): Initialize the app, build the "Login" screen. Dockerize it.
+Orchestration (Kubernetes): Write the YAML files to deploy both containers to the EC2.
+Polish: Connect the Frontend to the Backend.
+
