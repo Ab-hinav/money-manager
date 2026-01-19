@@ -2,10 +2,8 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
-    paths-ignore:
-      - 'terraform/**'  # Don't re-deploy app if we only changed infrastructure
-      - 'docs/**'
+    tags:
+      - 'deploy*'
 
 env:
   # Change this to your Docker Hub username
