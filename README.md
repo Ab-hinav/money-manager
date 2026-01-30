@@ -94,4 +94,4 @@ The application follows a **3-Tier Hybrid Architecture**:
 2.  **Backend**: Go API services running as containerized pods in Kubernetes, handling business logic.
 3.  **Database**: Managed PostgreSQL instance (AWS RDS) for reliable data persistence.
 
-For more details on the product requirements, refer to the `docs/` folder.
+For more details on the product requirements, refer to the `docs/` folder
