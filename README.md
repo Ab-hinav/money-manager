@@ -9,43 +9,49 @@ A comprehensive financial management application designed to provide users and o
 -   **Account Management**: Manage multiple financial accounts (Bank, Credit Card, Cash) with balance updates.
 -   **Dashboard**: Real-time overview of financial status, including net worth, expense breakdowns, and spending trends.
 -   **Organization Support**: Assign expenses to specific projects or departments.
+-   **Landing Page**: Modern, high-converting marketing page with "Clean Fintech" aesthetic.
 
 ## Tech Stack
 
 ### Frontend
--   **Framework**: [Next.js 16.1+](https://nextjs.org/) (App Router)
+-   **Framework**: [Next.js 16.1.3](https://nextjs.org/) (App Router)
 -   **Language**: TypeScript
 -   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
--   **UI Components**: Shadcn/UI (planned)
+-   **UI Components**: Shadcn/UI (Radix Primitives + Tailwind) & Lucide React
+-   **State Management**: React Hooks
 
 ### Backend
--   **Language**: Go (Golang) 1.25+
--   **Database Driver**: lib/pq
+-   **Language**: Go (Golang) 1.25.4
+-   **Database Driver**: `lib/pq`
+-   **Architecture**: Monolithic API (initially)
 
-### Database
--   **Database**: PostgreSQL
--   **Hosting**: AWS RDS
-
-### Infrastructure
--   **Cloud Provider**: AWS
+### Infrastructure & DevOps
+-   **Cloud Provider**: AWS (Region: `ap-south-1`)
 -   **Containerization**: Docker
--   **Orchestration**: Kubernetes (K3s)
--   **IaC**: Terraform
+-   **Orchestration**: Kubernetes (K3s) on EC2
+-   **IaC**: Terraform (AWS Provider ~> 5.0)
+-   **Database**: Managed PostgreSQL (AWS RDS)
 
-## Architecture Overview
+## Project Structure
 
-The application follows a 3-Tier Managed Architecture:
-1.  **Frontend**: Next.js application served via AWS CloudFront (CDN) and running in a Kubernetes pod.
-2.  **Backend**: Go API services running as containerized pods in Kubernetes, handling business logic.
-3.  **Database**: Managed PostgreSQL instance (AWS RDS) for reliable data persistence.
+-   `frontend/`: Next.js web application source code.
+    -   `app/`: App Router pages and layouts (Includes Marketing Landing Page `page.tsx`).
+    -   `components/`: Reusable UI components (Shadcn) and feature-specific components (`landing/`).
+    -   `lib/`: Utility functions.
+-   `backend/`: Go API services source code.
+    -   `cmd/`: Entry points for applications.
+    -   `internal/`: Private application and library code.
+-   `k8s/`: Kubernetes manifest files for deployment (`backend.yaml`, `frontend.yaml`, `ingress.yaml`).
+-   `terraform/`: Terraform configuration for provisioning AWS infrastructure (VPC, EC2, RDS).
+-   `docs/`: Project documentation (PRD) and design assets.
 
 ## Getting Started
 
 ### Prerequisites
 
 Ensure you have the following installed:
--   [Go](https://go.dev/dl/)
--   [Node.js](https://nodejs.org/)
+-   [Go 1.25+](https://go.dev/dl/)
+-   [Node.js 20+](https://nodejs.org/)
 -   [Docker](https://www.docker.com/)
 -   [Terraform](https://www.terraform.io/) (optional, for infrastructure)
 
@@ -70,15 +76,22 @@ Ensure you have the following installed:
     cd frontend
     npm install
     npm run dev
+    # Open http://localhost:3000 to view the app
     ```
 
-4.  **Docker Setup (Optional)**
-    You can build the images using the provided Dockerfiles in `backend/` and `frontend/`.
+4.  **Infrastructure Provisioning (Optional)**
+    ```bash
+    cd terraform
+    terraform init
+    terraform plan
+    terraform apply
+    ```
 
-## Project Structure
+## Architecture Overview
 
--   `frontend/`: Source code for the Next.js web application.
--   `backend/`: Source code for the Go API services.
--   `k8s/`: Kubernetes manifest files for deployment.
--   `terraform/`: Terraform configuration for AWS infrastructure.
--   `docs/`: Project documentation and PRD.
+The application follows a **3-Tier Hybrid Architecture**:
+1.  **Frontend**: Next.js application served via AWS CloudFront (CDN) and running in a Kubernetes pod (or locally).
+2.  **Backend**: Go API services running as containerized pods in Kubernetes, handling business logic.
+3.  **Database**: Managed PostgreSQL instance (AWS RDS) for reliable data persistence.
+
+For more details on the product requirements, refer to the `docs/` folder.
