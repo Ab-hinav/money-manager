@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/Ab-hinav/money-manager/internal/config"
+	"github.com/Ab-hinav/money-manager/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
@@ -31,4 +33,8 @@ func main() {
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		fmt.Printf("Server failed: %s\n", err)
 	}
+
+	models.RunMigrations(db)
+	hash, _ := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
+	models.CreateTestUser(db, "Admin User", "admin@example.com", string(hash))
 }
