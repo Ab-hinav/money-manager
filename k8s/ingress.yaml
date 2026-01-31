@@ -7,14 +7,14 @@ spec:
   rules:
   - http:
       paths:
-      # 1. Traffic starting with /api goes to Backend
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: money-backend-service
-            port:
-              number: 80
+      # # 1. Traffic starting with /api goes to Backend
+      # - path: /api
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: money-backend-service
+      #       port:
+      #         number: 80
       # 2. Everything else goes to Frontend
       - path: /
         pathType: Prefix

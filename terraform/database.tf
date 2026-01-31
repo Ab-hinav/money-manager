@@ -10,7 +10,7 @@ resource "aws_db_instance" "postgres" {
   password             = "SecurePass123!" # We will move this to secrets later!
   db_name              = "moneymanager"
   
-  publicly_accessible  = false
+  publicly_accessible  = true
   skip_final_snapshot  = true # Important for easy destruction during dev
   
   vpc_security_group_ids = [aws_security_group.money_sg.id]

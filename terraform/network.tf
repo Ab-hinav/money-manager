@@ -44,6 +44,15 @@ resource "aws_security_group" "money_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # Ideally restrict to your IP
   }
+
+  # Inbound: PostgreSQL (Db)
+  ingress {
+    description = "PostgreSQL"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   
   # Inbound: Self-Reference (Allow EC2 to talk to RDS)
   ingress {

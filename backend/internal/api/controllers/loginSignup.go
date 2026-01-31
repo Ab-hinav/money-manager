@@ -1,0 +1,151 @@
+package controllers
+
+import (
+	"database/sql"
+	"encoding/json"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
+
+	"github.com/Ab-hinav/money-manager/internal/utils"
+)
+
+// Re-declare jwtKey here or import from a shared config package
+// For simplicity in this snippet, we assume it's available or duplicated.
+var jwtKey = []byte(os.Getenv("JWT_SECRET"))
+
+type AuthHandler struct {
+	DB *sql.DB
+}
+
+type Credentials struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type Claims struct {
+	Email    string `json:"email"`
+	UserID   int    `json:"user_id"`
+	FamilyID *int   `json:"family_id,omitempty"`
+	jwt.RegisteredClaims
+}
+
+// Login handles the NextAuth credentials provider call
+func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+	var creds Credentials
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// 1. Fetch User details
+	var storedPass, name string
+	var userID int
+	var familyID *int
+
+	// We verify email and grab the ID, Password, and Name
+	err := h.DB.QueryRow("SELECT id, password, name, family_id FROM users WHERE email=$1", creds.Email).Scan(&userID, &storedPass, &name, &familyID)
+	if err == sql.ErrNoRows {
+		http.Error(w, "User not found", http.StatusUnauthorized)
+		return
+	} else if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+
+	// 2. Check Password
+	if err := bcrypt.CompareHashAndPassword([]byte(storedPass), []byte(creds.Password)); err != nil {
+		http.Error(w, "Invalid password", http.StatusUnauthorized)
+		return
+	}
+
+	// 3. Generate JWT Token
+	expirationTime := time.Now().Add(time.Duration(utils.GetEnvInt("JWT_EXPIRY", 6)) * time.Hour)
+	claims := &Claims{
+		Email:    creds.Email,
+		UserID:   userID,
+		FamilyID: familyID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		http.Error(w, "Error generating token", http.StatusInternalServerError)
+		return
+	}
+
+	// 4. Return JSON (NextAuth will read this)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "Login successful",
+		"token":   tokenString, // Bearer token for NextAuth
+		"user": map[string]interface{}{
+			"id":    userID,
+			"email": creds.Email,
+			"name":  name,
+		},
+	})
+}
+
+// Signup handles new user registration
+func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
+	var user struct {
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Basic validation
+	if user.Email == "" || user.Password == "" || user.Name == "" {
+		http.Error(w, "Missing required fields", http.StatusBadRequest)
+		return
+	}
+
+	// 1. Check if user already exists
+	var existingID int
+	err := h.DB.QueryRow("SELECT id FROM users WHERE email=$1", user.Email).Scan(&existingID)
+	if err == nil {
+		http.Error(w, "User already exists", http.StatusConflict)
+		return
+	} else if err != sql.ErrNoRows {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+
+	// 2. Hash Password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Error processing password", http.StatusInternalServerError)
+		return
+	}
+
+	// 3. Insert User
+	var newUserID int
+	err = h.DB.QueryRow(
+		"INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id",
+		user.Name, user.Email, string(hashedPassword),
+	).Scan(&newUserID)
+
+	if err != nil {
+		http.Error(w, "Error creating user", http.StatusInternalServerError)
+		return
+	}
+
+	// 4. Return Success
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "User registered successfully",
+		"user_id": newUserID,
+	})
+}

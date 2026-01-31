@@ -24,8 +24,8 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="py-24 bg-gray-50 dark:bg-[#0A1A14]/95">
-      <div className="container mx-auto ">
+    <section id="features" className="py-16 lg:py-24 bg-gray-50 dark:bg-[#0A1A14]/95">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             Engineered for Your Growth

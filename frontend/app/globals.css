@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@layer utilities {
+  .bg-grid-small-black\/5 {
+    background-size: 20px 20px;
+    background-image: radial-gradient(circle, #000 1px, transparent 1px);
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
