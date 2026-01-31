@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -78,5 +77,5 @@ func RunMigrations(db *sql.DB) {
 			log.Printf("Migration Warning: %v\nQuery: %s", err, query)
 		}
 	}
-	fmt.Println("Database Migrations Completed Successfully.")
+	log.Println("Database Migrations Completed Successfully.")
 }

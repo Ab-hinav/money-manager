@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Ab-hinav/money-manager/internal/config"
@@ -28,13 +28,14 @@ func main() {
 		w.Write([]byte("Login Endpoint Coming Soon"))
 	})
 
-	// 3. Start
-	fmt.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", mux); err != nil {
-		fmt.Printf("Server failed: %s\n", err)
-	}
-
+	// 3. Run Migrations & Seed Data
 	models.RunMigrations(db)
 	hash, _ := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
 	models.CreateTestUser(db, "Admin User", "admin@example.com", string(hash))
+
+	// 4. Start
+	log.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", mux); err != nil {
+		log.Printf("Server failed: %s\n", err)
+	}
 }
