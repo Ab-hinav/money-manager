@@ -1,61 +1,67 @@
 # Money Manager
 
-A comprehensive financial management application designed to provide users and organizations with a clear view of their expenses, savings, and overall financial health. This project empowers users to achieve better financial control through real-time visualization of financial activities.
+A comprehensive financial management application designed to provide users and organizations with a clear view of their expenses, savings, and overall financial health.
 
-## Features
+## Key Features
 
--   **Expense Tracking**: Log and categorize individual expenses (e.g., Groceries, Rent, Utilities). Support for custom categories and recurring entries.
--   **Income Tracking**: Log various sources of income with support for recurring entries.
--   **Account Management**: Manage multiple financial accounts (Bank, Credit Card, Cash) with balance updates.
--   **Dashboard**: Real-time overview of financial status, including net worth, expense breakdowns, and spending trends.
--   **Organization Support**: Assign expenses to specific projects or departments.
--   **Landing Page**: Modern, high-converting marketing page with "Clean Fintech" aesthetic.
+### Current (MVP)
+-   **Secure Authentication**: JWT-based login and registration system using NextAuth.js.
+-   **Interactive Dashboard**: Real-time overview of financial status.
+-   **Transaction Management**: User interface for adding and categorizing transactions.
+-   **Dynamic Navigation**: Context-aware navbar with authenticated/guest states and mobile support.
+-   **Responsive Design**: Mobile-first "Clean Fintech" aesthetic using Tailwind CSS and Shadcn/UI.
+
+### Planned
+-   **Advanced Analytics**: Detailed expense breakdowns and spending trends.
+-   **Family/Organization Support**: Shared accounts and role-based access.
+-   **Account Management**: Multi-account support (Bank, Credit Card, Cash).
 
 ## Tech Stack
 
 ### Frontend
--   **Framework**: [Next.js 16.1.3](https://nextjs.org/) (App Router)
+-   **Framework**: [Next.js 16+](https://nextjs.org/) (App Router)
 -   **Language**: TypeScript
 -   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
--   **UI Components**: Shadcn/UI (Radix Primitives + Tailwind) & Lucide React
--   **State Management**: React Hooks
+-   **UI Library**: Shadcn/UI (Radix Primitives + Lucide Icons)
+-   **Auth**: NextAuth.js (Session Management)
 
 ### Backend
--   **Language**: Go (Golang) 1.25.4
+-   **Language**: Go (Golang)
+-   **API**: RESTful Monolith
+-   **Auth**: JWT (JSON Web Tokens)
 -   **Database Driver**: `lib/pq`
--   **Architecture**: Monolithic API (initially)
 
 ### Infrastructure & DevOps
--   **Cloud Provider**: AWS (Region: `ap-south-1`)
+-   **Cloud**: AWS (Region: `ap-south-1`)
 -   **Containerization**: Docker
--   **Orchestration**: Kubernetes (K3s) on EC2
--   **IaC**: Terraform (AWS Provider ~> 5.0)
--   **Database**: Managed PostgreSQL (AWS RDS)
+-   **Orchestration**: K3s (Lightweight Kubernetes) on EC2
+-   **IaC**: Terraform (VPC, EC2, RDS)
+-   **Database**: AWS RDS (Managed PostgreSQL)
 
 ## Project Structure
 
--   `frontend/`: Next.js web application source code.
-    -   `app/`: App Router pages and layouts (Includes Marketing Landing Page `page.tsx`).
-    -   `components/`: Reusable UI components (Shadcn) and feature-specific components (`landing/`).
-    -   `lib/`: Utility functions.
--   `backend/`: Go API services source code.
-    -   `cmd/`: Entry points for applications.
-    -   `internal/`: Private application and library code.
--   `k8s/`: Kubernetes manifest files for deployment (`backend.yaml`, `frontend.yaml`, `ingress.yaml`).
--   `terraform/`: Terraform configuration for provisioning AWS infrastructure (VPC, EC2, RDS).
--   `docs/`: Project documentation (PRD) and design assets.
+```
+.
+├── frontend/           # Next.js Web Application
+│   ├── app/            # App Router Pages & Layouts
+│   ├── components/     # Reusable UI Components (Shadcn)
+│   └── lib/            # Utilities & Auth Config
+├── backend/            # Go API Service
+│   ├── cmd/server/     # Entry Point
+│   └── internal/       # Business Logic, Controllers, Models
+├── k8s/                # Kubernetes Manifests (Deployments, Services, Ingress)
+├── terraform/          # Infrastructure as Code (AWS)
+└── docs/               # Product Requirements & Design Assets
+```
 
 ## Getting Started
 
 ### Prerequisites
-
-Ensure you have the following installed:
 -   [Go 1.25+](https://go.dev/dl/)
 -   [Node.js 20+](https://nodejs.org/)
 -   [Docker](https://www.docker.com/)
--   [Terraform](https://www.terraform.io/) (optional, for infrastructure)
 
-### Installation & Local Setup
+### Local Development
 
 1.  **Clone the repository**
     ```bash
@@ -67,8 +73,8 @@ Ensure you have the following installed:
     ```bash
     cd backend
     go mod download
-    # Run the server
     go run cmd/server/main.go
+    # Server starts on localhost:8080
     ```
 
 3.  **Frontend Setup**
@@ -76,22 +82,20 @@ Ensure you have the following installed:
     cd frontend
     npm install
     npm run dev
-    # Open http://localhost:3000 to view the app
+    # App opens at http://localhost:3000
     ```
 
-4.  **Infrastructure Provisioning (Optional)**
+4.  **Infrastructure (Optional)**
     ```bash
     cd terraform
-    terraform init
-    terraform plan
-    terraform apply
+    terraform init && terraform apply
     ```
 
-## Architecture Overview
+## Architecture
 
-The application follows a **3-Tier Hybrid Architecture**:
-1.  **Frontend**: Next.js application served via AWS CloudFront (CDN) and running in a Kubernetes pod (or locally).
-2.  **Backend**: Go API services running as containerized pods in Kubernetes, handling business logic.
-3.  **Database**: Managed PostgreSQL instance (AWS RDS) for reliable data persistence.
+The application follows a **3-Tier Architecture**:
+1.  **Frontend**: Next.js (SSR/CSR) running in K3s (or Vercel), served via AWS CloudFront.
+2.  **Backend**: Go API handling business logic and DB interactions.
+3.  **Database**: AWS RDS (PostgreSQL) for persistent storage.
 
-For more details on the product requirements, refer to the `docs/` folder
+For detailed product requirements, refer to [docs/PRD_live.txt](docs/PRD_live.txt).
