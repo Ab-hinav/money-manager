@@ -21,6 +21,10 @@ spec:
         env:
         - name: NEXT_PUBLIC_API_URL
           value: "http://money-backend-service:80"
+        - name: NEXTAUTH_SECRET
+          value: "your-super-secret-random-token-change-this-in-prod"
+        - name: NEXTAUTH_URL
+          value: "http://13.234.232.184" # Update this if using a domain
 ---
 apiVersion: v1
 kind: Service
