@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { getApiUrl } from "@/lib/utils";
 
 export function RegisterForm() {
     const router = useRouter();
@@ -25,7 +26,7 @@ export function RegisterForm() {
         const password = formData.get("password") as string;
 
         try {
-            const response = await fetch(`/api/signup`, {
+            const response = await fetch(`${getApiUrl()}/api/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -6,9 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getApiUrl() {
-  // If undefined, use relative path on client to leverage Next.js Rewrites
+  // Client-side: Return public API URL
   if (typeof window !== "undefined") {
-    return "";
+    // If NEXT_PUBLIC_API_URL is set, use it. Otherwise fallback to localhost for dev.
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
   }
   
   // Server-side: Use internal K8s URL or local dev fallback
