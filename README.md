@@ -19,14 +19,15 @@ A comprehensive financial management application designed to provide users and o
 ## Tech Stack
 
 ### Frontend
--   **Framework**: [Next.js 16+](https://nextjs.org/) (App Router)
+-   **Framework**: [Next.js 16.1.3](https://nextjs.org/) (App Router)
 -   **Language**: TypeScript
 -   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 -   **UI Library**: Shadcn/UI (Radix Primitives + Lucide Icons)
 -   **Auth**: NextAuth.js (Session Management)
 
 ### Backend
--   **Language**: Go (Golang)
+-   **Language**: Go 1.25.4
+-   **Framework**: Chi Router
 -   **API**: RESTful Monolith
 -   **Auth**: JWT (JSON Web Tokens)
 -   **Database Driver**: `lib/pq`
@@ -36,21 +37,28 @@ A comprehensive financial management application designed to provide users and o
 -   **Containerization**: Docker
 -   **Orchestration**: K3s (Lightweight Kubernetes) on EC2
 -   **IaC**: Terraform (VPC, EC2, RDS)
--   **Database**: AWS RDS (Managed PostgreSQL)
+-   **Database**: AWS RDS (Managed PostgreSQL 16 - Free Tier)
+-   **CI/CD**: GitHub Actions
 
 ## Project Structure
 
-```
+```bash
 .
 ├── frontend/           # Next.js Web Application
 │   ├── app/            # App Router Pages & Layouts
 │   ├── components/     # Reusable UI Components (Shadcn)
-│   └── lib/            # Utilities & Auth Config
+│   ├── lib/            # Utilities & Auth Config
+│   └── types/          # TypeScript Definitions
 ├── backend/            # Go API Service
 │   ├── cmd/server/     # Entry Point
-│   └── internal/       # Business Logic, Controllers, Models
+│   └── internal/       # Application Logic
+│       ├── api/        # Controllers & Routes
+│       ├── config/     # Configuration & DB Setup
+│       ├── models/     # Data Structures
+│       └── utils/      # Helper Functions
 ├── k8s/                # Kubernetes Manifests (Deployments, Services, Ingress)
 ├── terraform/          # Infrastructure as Code (AWS)
+├── .github/workflows/  # CI/CD Pipelines
 └── docs/               # Product Requirements & Design Assets
 ```
 
@@ -60,6 +68,7 @@ A comprehensive financial management application designed to provide users and o
 -   [Go 1.25+](https://go.dev/dl/)
 -   [Node.js 20+](https://nodejs.org/)
 -   [Docker](https://www.docker.com/)
+-   [Terraform](https://www.terraform.io/) (Optional)
 
 ### Local Development
 
@@ -70,6 +79,7 @@ A comprehensive financial management application designed to provide users and o
     ```
 
 2.  **Backend Setup**
+    Create a `.env` file in `backend/` (see `backend/config/config.go` for required keys) or set environment variables directly.
     ```bash
     cd backend
     go mod download
@@ -78,6 +88,14 @@ A comprehensive financial management application designed to provide users and o
     ```
 
 3.  **Frontend Setup**
+    Create a `.env` file in `frontend/` with:
+    ```env
+    NEXT_PUBLIC_API_URL=http://localhost:8080
+    NEXTAUTH_SECRET=your-secret
+    NEXTAUTH_URL=http://localhost:3000
+    ```
+
+    Run the app:
     ```bash
     cd frontend
     npm install
@@ -86,9 +104,11 @@ A comprehensive financial management application designed to provide users and o
     ```
 
 4.  **Infrastructure (Optional)**
+    Deploy to AWS using Terraform:
     ```bash
     cd terraform
     terraform init && terraform apply
+    # Note outputs: ec2_public_ip, db_endpoint, db_connection_url
     ```
 
 ## Architecture

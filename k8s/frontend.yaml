@@ -21,6 +21,8 @@ spec:
         env:
         - name: NEXT_PUBLIC_API_URL
           value: "http://money-backend-service:80"
+        - name: BACKEND_INTERNAL_URL
+          value: "http://money-backend-service:80"
         - name: NEXTAUTH_SECRET
           value: "your-super-secret-random-token-change-this-in-prod"
         - name: NEXTAUTH_URL

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CalendarIcon, ChevronDown, Plus, Wallet, Home, Briefcase, Plane } from "lucide-react"
+import { ChevronDown, Plus, Home, Briefcase, Plane } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -179,8 +179,8 @@ export function TransactionForm({ categories = [] }: TransactionFormProps) {
       }
 
       console.log("Submitting Transaction:", payload)
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`, {
+      
+      const res = await fetch("/api/transactions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

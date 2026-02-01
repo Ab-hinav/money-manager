@@ -2,11 +2,13 @@ import { TransactionForm } from "@/components/forms/transaction-form"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
+import { getApiUrl } from "@/lib/utils";
+
 async function getCategories() {
   const session = await getServerSession(authOptions)
   console.log("Session:", session)
   try {
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/categories", {
+    const res = await fetch(getApiUrl()+"/api/categories", {
       cache: "no-store",
       headers: {
         Authorization: `Bearer ${session?.accessToken}`

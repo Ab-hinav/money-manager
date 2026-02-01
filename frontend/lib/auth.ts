@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getApiUrl } from "./utils";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -21,7 +22,7 @@ export const authOptions: NextAuthOptions = {
         try {
           // Connect to GO BACKEND
           // Use 'http://localhost:8080' for local, or your CloudFront URL for Prod
-          const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+          const backendUrl = getApiUrl();
           
           const res = await fetch(`${backendUrl}/api/login`, {
             method: "POST",
