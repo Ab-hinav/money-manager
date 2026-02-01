@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Family Group Transaction Entry</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11d452",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1b12] dark:text-[#e7f3eb]">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7f3eb] dark:border-[#1f3a2b] px-6 lg:px-10 py-4 bg-background-light dark:bg-background-dark z-10 sticky top-0">
+<div class="flex items-center gap-4 text-[#0d1b12] dark:text-[#e7f3eb]">
+<div class="size-8 flex items-center justify-center bg-primary/20 rounded-lg text-primary">
+<span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+</div>
+<h2 class="text-lg lg:text-xl font-bold leading-tight tracking-tight">FinFlow</h2>
+</div>
+<div class="flex gap-3">
+<button class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-background-light dark:bg-background-dark border border-[#e7f3eb] dark:border-[#1f3a2b] hover:bg-[#e7f3eb] dark:hover:bg-[#1f3a2b] transition-colors text-[#0d1b12] dark:text-[#e7f3eb]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-primary text-white hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</header>
+<main class="layout-container flex h-full grow flex-col items-center justify-start py-8 px-4 lg:px-10">
+<div class="layout-content-container flex flex-col w-full max-w-[640px] flex-1 gap-6">
+<!-- Page Heading & Context -->
+<div class="flex flex-col gap-2 text-center md:text-left md:flex-row md:justify-between md:items-end">
+<div>
+<h1 class="text-[#0d1b12] dark:text-white tracking-tight text-3xl font-bold leading-tight">Add Transaction</h1>
+<p class="text-[#4c9a66] dark:text-[#8bcfa3] text-sm font-medium mt-1">Record a new expense or income</p>
+</div>
+</div>
+<!-- Context Switcher (Segmented Button) -->
+<div class="flex w-full">
+<div class="flex h-12 flex-1 items-center justify-center rounded-xl bg-[#e7f3eb] dark:bg-[#1f3a2b] p-1">
+<label class="group flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-background-light dark:has-[:checked]:bg-[#2a4a36] has-[:checked]:shadow-sm">
+<span class="truncate text-sm font-bold text-[#4c9a66] dark:text-[#8bcfa3] group-has-[:checked]:text-[#0d1b12] dark:group-has-[:checked]:text-white">Personal</span>
+<input class="invisible w-0 absolute" name="context-toggle" type="radio" value="Personal"/>
+</label>
+<label class="group flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-background-light dark:has-[:checked]:bg-[#2a4a36] has-[:checked]:shadow-sm">
+<span class="truncate text-sm font-bold text-[#4c9a66] dark:text-[#8bcfa3] group-has-[:checked]:text-[#0d1b12] dark:group-has-[:checked]:text-white">Family/Group</span>
+<input checked="" class="invisible w-0 absolute" name="context-toggle" type="radio" value="Family/Group"/>
+</label>
+</div>
+</div>
+<!-- Group Selector Carousel -->
+<div class="flex flex-col gap-3">
+<h3 class="text-[#0d1b12] dark:text-white tracking-tight text-lg font-bold leading-tight px-1">Select Group</h3>
+<div class="flex overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 gap-4 no-scrollbar scroll-smooth snap-x">
+<!-- Card 1: Home (Active) -->
+<label class="relative flex-none w-40 cursor-pointer group snap-start">
+<input checked="" class="peer sr-only" name="group-select" type="radio" value="home"/>
+<div class="flex flex-col h-full w-full rounded-2xl border-2 border-transparent bg-white dark:bg-[#1a2e22] p-3 shadow-sm transition-all peer-checked:border-primary peer-checked:shadow-md hover:shadow-md dark:shadow-none">
+<div class="w-full h-24 bg-center bg-cover rounded-xl mb-3 relative overflow-hidden bg-gray-100" data-alt="Cozy living room interior with plants" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-VmsTn3s8K0Kz6XyQOYwhlBSgB96pvHUlukuPLOP12jNfmqu6jH0VfQEfdlZJpiOtswMufELhaB1skI7wciLYqlbbiPenCbcGWr6q-VebgmYXRnPhVRtkPwDMs3VqGb7FboYiULOrdhRZk_HpLGKW7tAwhAIIxHxGB9uYIxhLOfl4rTcOxjqwtbpNZibq-7IZ5mOOxC0B8z8oykoHQ2VKPUeTkHpRfbY562dkQaLEOSl6QD3tVETrjIB5aBXkgvOxX9BdZmQEJeSH');">
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+<div>
+<p class="text-[#0d1b12] dark:text-white text-base font-bold leading-tight">Home</p>
+<p class="text-[#4c9a66] dark:text-[#8bcfa3] text-xs font-medium">Shared Expenses</p>
+</div>
+<div class="absolute top-2 right-2 size-6 bg-primary rounded-full text-white items-center justify-center hidden peer-checked:flex shadow-sm z-10">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+</div>
+</label>
+<!-- Card 2: Vacation -->
+<label class="relative flex-none w-40 cursor-pointer group snap-start">
+<input class="peer sr-only" name="group-select" type="radio" value="vacation"/>
+<div class="flex flex-col h-full w-full rounded-2xl border-2 border-transparent bg-white dark:bg-[#1a2e22] p-3 shadow-sm transition-all peer-checked:border-primary peer-checked:shadow-md hover:shadow-md dark:shadow-none">
+<div class="w-full h-24 bg-center bg-cover rounded-xl mb-3 relative overflow-hidden bg-gray-100" data-alt="Tropical beach with palm trees" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCaDWDx2bMV5v6kZSN94Kg9STsmQHHT4jkbT1713gYeFPKw8hGNpglRX7XYMYJVStKpwMnbffwSopANIleqzhkRzsIPM35fymsA4pLw0RDp1j3PMi-ITKOVBgCTP7XilEmnHh1uLE9LhwM5VepJAy2PzIXAPHxjM7FC5RR5J5eHYDB2sUV0b2HO3OJS2GR2b5hISwyUBDuppGB5lpsEZ-5wqlzLmz6g_I8RfnG7syOq9jy8omvNTziRc4vf0ugT2C-yPxv0OdPpT2BW');">
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+<div>
+<p class="text-[#0d1b12] dark:text-white text-base font-bold leading-tight">Vacation</p>
+<p class="text-[#4c9a66] dark:text-[#8bcfa3] text-xs font-medium">Bali 2024</p>
+</div>
+<div class="absolute top-2 right-2 size-6 bg-primary rounded-full text-white items-center justify-center hidden peer-checked:flex shadow-sm z-10">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+</div>
+</label>
+<!-- Card 3: Business -->
+<label class="relative flex-none w-40 cursor-pointer group snap-start">
+<input class="peer sr-only" name="group-select" type="radio" value="business"/>
+<div class="flex flex-col h-full w-full rounded-2xl border-2 border-transparent bg-white dark:bg-[#1a2e22] p-3 shadow-sm transition-all peer-checked:border-primary peer-checked:shadow-md hover:shadow-md dark:shadow-none">
+<div class="w-full h-24 bg-center bg-cover rounded-xl mb-3 relative overflow-hidden bg-gray-100" data-alt="Modern office meeting room" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGKkQaLw3vdy0-QKh8CWo2IfHM_Q2QfPyFrHXLvZhHuLlpXvJzmkMV6zmQ3pYaIEY8aLD3OuCB0PBPkiBHKL1mURfKR2OIOTQENxAFfi9s5b8uYUgsQsD_q60kwd1IEdfVWVLKSpmD5_bL2c3ugQuXGD8sKNgB63IAmA_iXq5IVsNnfa3L5qnBwbCVV2Ak2BUR6_gNeNU6jdepvq02zRGrfTexqsIJrzsEtQ0hbXCnRxXiU0EkekvXSh8ozySCwc5GtYssTopctghp');">
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+<div>
+<p class="text-[#0d1b12] dark:text-white text-base font-bold leading-tight">Business</p>
+<p class="text-[#4c9a66] dark:text-[#8bcfa3] text-xs font-medium">Startup Costs</p>
+</div>
+<div class="absolute top-2 right-2 size-6 bg-primary rounded-full text-white items-center justify-center hidden peer-checked:flex shadow-sm z-10">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+</div>
+</label>
+<!-- Card 4: New -->
+<button class="relative flex-none w-20 flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#e7f3eb] dark:border-[#2a4a36] bg-transparent p-3 hover:bg-[#e7f3eb] dark:hover:bg-[#1f3a2b] transition-colors snap-start">
+<span class="material-symbols-outlined text-3xl text-[#4c9a66] dark:text-[#8bcfa3]">add_circle</span>
+<span class="text-xs font-bold text-[#4c9a66] dark:text-[#8bcfa3]">Add New</span>
+</button>
+</div>
+</div>
+<!-- Transaction Details Form -->
+<div class="bg-white dark:bg-[#1a2e22] rounded-2xl shadow-sm p-5 flex flex-col gap-6">
+<!-- Tabs -->
+<div class="flex border-b border-[#e7f3eb] dark:border-[#2a4a36]">
+<button class="flex-1 pb-3 border-b-2 border-primary text-primary font-bold text-sm">Expense</button>
+<button class="flex-1 pb-3 border-b-2 border-transparent text-[#6b7280] dark:text-[#9ca3af] font-medium text-sm hover:text-[#0d1b12] dark:hover:text-white transition-colors">Income</button>
+<button class="flex-1 pb-3 border-b-2 border-transparent text-[#6b7280] dark:text-[#9ca3af] font-medium text-sm hover:text-[#0d1b12] dark:hover:text-white transition-colors">Loan</button>
+<button class="flex-1 pb-3 border-b-2 border-transparent text-[#6b7280] dark:text-[#9ca3af] font-medium text-sm hover:text-[#0d1b12] dark:hover:text-white transition-colors">Invest</button>
+</div>
+<!-- Amount Input -->
+<div class="flex flex-col items-center gap-2 py-4">
+<label class="text-sm font-medium text-[#4c9a66] dark:text-[#8bcfa3]">Total Amount</label>
+<div class="relative flex items-center justify-center w-full">
+<span class="text-4xl font-bold text-[#0d1b12] dark:text-white mr-1">$</span>
+<input class="w-full text-center text-5xl font-extrabold text-[#0d1b12] dark:text-white bg-transparent border-none focus:ring-0 p-0 placeholder-gray-300 dark:placeholder-gray-600 appearance-none [appearance:textfield] [&amp;::-webkit-outer-spin-button]:appearance-none [&amp;::-webkit-inner-spin-button]:appearance-none" placeholder="0.00" type="number"/>
+</div>
+</div>
+<!-- Additional Fields Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Category -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold uppercase tracking-wider text-[#6b7280] dark:text-[#9ca3af]">Category</label>
+<div class="relative">
+<select class="w-full h-12 rounded-xl bg-[#f8fcf9] dark:bg-[#102216] border border-[#e7f3eb] dark:border-[#2a4a36] text-[#0d1b12] dark:text-white px-4 pr-10 appearance-none focus:ring-2 focus:ring-primary focus:border-transparent font-medium">
+<option>🛒 Groceries</option>
+<option>🏠 Rent</option>
+<option>💡 Utilities</option>
+<option>🍽️ Dining Out</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[#6b7280]">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Date -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold uppercase tracking-wider text-[#6b7280] dark:text-[#9ca3af]">Date</label>
+<input class="w-full h-12 rounded-xl bg-[#f8fcf9] dark:bg-[#102216] border border-[#e7f3eb] dark:border-[#2a4a36] text-[#0d1b12] dark:text-white px-4 focus:ring-2 focus:ring-primary focus:border-transparent font-medium" type="date"/>
+</div>
+<!-- Description -->
+<div class="flex flex-col gap-1.5 md:col-span-2">
+<label class="text-xs font-bold uppercase tracking-wider text-[#6b7280] dark:text-[#9ca3af]">Description</label>
+<input class="w-full h-12 rounded-xl bg-[#f8fcf9] dark:bg-[#102216] border border-[#e7f3eb] dark:border-[#2a4a36] text-[#0d1b12] dark:text-white px-4 focus:ring-2 focus:ring-primary focus:border-transparent font-medium placeholder-gray-400" placeholder="What's this for?" type="text"/>
+</div>
+<!-- Split Method -->
+<div class="flex flex-col gap-1.5 md:col-span-2">
+<label class="text-xs font-bold uppercase tracking-wider text-[#6b7280] dark:text-[#9ca3af]">Split Method</label>
+<div class="flex gap-2 overflow-x-auto pb-2">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="split" type="radio"/>
+<div class="px-4 py-2 rounded-lg border border-[#e7f3eb] dark:border-[#2a4a36] bg-[#f8fcf9] dark:bg-[#102216] text-sm font-medium text-[#0d1b12] dark:text-white peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all whitespace-nowrap">
+                                        Equal Split
+                                    </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="split" type="radio"/>
+<div class="px-4 py-2 rounded-lg border border-[#e7f3eb] dark:border-[#2a4a36] bg-[#f8fcf9] dark:bg-[#102216] text-sm font-medium text-[#0d1b12] dark:text-white peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all whitespace-nowrap">
+                                        By Percentage
+                                    </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="split" type="radio"/>
+<div class="px-4 py-2 rounded-lg border border-[#e7f3eb] dark:border-[#2a4a36] bg-[#f8fcf9] dark:bg-[#102216] text-sm font-medium text-[#0d1b12] dark:text-white peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all whitespace-nowrap">
+                                        By Shares
+                                    </div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="w-full pt-2">
+<button class="w-full h-14 bg-primary hover:bg-green-600 text-white font-bold text-lg rounded-xl shadow-lg shadow-green-500/30 flex items-center justify-center gap-2 transition-all transform active:scale-[0.99]">
+<span class="material-symbols-outlined">add_circle</span>
+<span>Add to Home</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<style>
+        /* Custom scrollbar hiding for modern clean look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

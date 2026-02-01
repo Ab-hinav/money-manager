@@ -28,6 +28,7 @@ func NewRouter(db *sql.DB) *chi.Mux {
 
 	// 2. Initialize Handlers
 	authHandler := &controllers.AuthHandler{DB: db}
+	addTransactionHandler := &controllers.AddTransactionHandler{DB: db}
 
 	// 3. API Routes
 	r.Route("/api", func(r chi.Router) {
@@ -46,6 +47,8 @@ func NewRouter(db *sql.DB) *chi.Mux {
 		r.Group(func(r chi.Router) {
 			r.Use(AuthMiddleware) // <--- Gatekeeper applied here
 
+			r.Get("/categories", addTransactionHandler.GetCategoriesData)
+
 			// Dashboard
 			r.Get("/dashboard", func(w http.ResponseWriter, r *http.Request) {
 				// We can access user info from context now
@@ -59,9 +62,7 @@ func NewRouter(db *sql.DB) *chi.Mux {
 				r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 					w.Write([]byte("List all transactions"))
 				})
-				r.Post("/", func(w http.ResponseWriter, r *http.Request) {
-					w.Write([]byte("Create a transaction"))
-				})
+				r.Post("/", addTransactionHandler.AddTransaction)
 			})
 		})
 	})

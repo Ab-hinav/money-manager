@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -24,7 +23,7 @@ func main() {
 	router := api.NewRouter(db)
 
 	// 5. Start Server
-	fmt.Println("Server starting on port 8080...")
+	log.Println("Server starting on port 8080...")
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}

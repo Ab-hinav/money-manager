@@ -23,6 +23,6 @@ func ConnectDB() *sql.DB {
 		log.Fatalf("Error connecting to DB: %v", err)
 	}
 
-	fmt.Println("Connected to Database successfully!")
+	log.Println("Connected to Database successfully!")
 	return db
 }

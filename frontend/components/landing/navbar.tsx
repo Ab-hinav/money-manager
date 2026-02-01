@@ -43,7 +43,7 @@ export function Navbar() {
             <>
               <Link href="/dashboard" className="hover:text-teal-600 transition-colors">Dashboard</Link>
               <Link href="/family" className="hover:text-teal-600 transition-colors">Family</Link>
-              <Link href="/transaction/add" className="hover:text-teal-600 transition-colors">Add Transaction</Link>
+              <Link href="/add-transaction" className="hover:text-teal-600 transition-colors">Add Transaction</Link>
               <Link href="/analytics" className="hover:text-teal-600 transition-colors">Analytics</Link>
               <Link href="/settings" className="hover:text-teal-600 transition-colors">Settings</Link>
             </>
@@ -144,7 +144,7 @@ export function Navbar() {
                   <Link href="/family" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
                     <Users className="h-5 w-5" /> Family
                   </Link>
-                  <Link href="/transaction/add" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
+                  <Link href="/add-transaction" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
                     <PlusCircle className="h-5 w-5" /> Add Transaction
                   </Link>
                   <Link href="/analytics" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">

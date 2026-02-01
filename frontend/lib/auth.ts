@@ -3,7 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
-  pages: { signIn: "/login" }, // Redirect here if unauthorized
+  pages: { signIn: "/login" 
+    ,signOut: "/",
+    newUser: "/register"
+  }, // Redirect here if unauthorized
   
   providers: [
     CredentialsProvider({
