@@ -18,7 +18,7 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler(cors.Options{
 		// Allow Next.js (port 3000) and your CloudFront URL
-		AllowedOrigins:   []string{"http://localhost:3000", "https://*"},
+		AllowedOrigins:   []string{"http://localhost:3000", "http://127.0.0.1:3000", "https://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
@@ -29,6 +29,7 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	// 2. Initialize Handlers
 	authHandler := &controllers.AuthHandler{DB: db}
 	addTransactionHandler := &controllers.AddTransactionHandler{DB: db}
+	familyHandler := &controllers.FamilyHandler{DB: db}
 
 	// 3. API Routes
 	r.Route("/api", func(r chi.Router) {
@@ -48,6 +49,11 @@ func NewRouter(db *sql.DB) *chi.Mux {
 			r.Use(AuthMiddleware) // <--- Gatekeeper applied here
 
 			r.Get("/categories", addTransactionHandler.GetCategoriesData)
+
+			r.Route("/family", func(r chi.Router) {
+				r.Get("/", familyHandler.GetFamilyData)
+				r.Post("/", familyHandler.CreateFamily)
+			})
 
 			// Dashboard
 			r.Get("/dashboard", func(w http.ResponseWriter, r *http.Request) {

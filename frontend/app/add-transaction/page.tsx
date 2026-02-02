@@ -1,4 +1,4 @@
-import { TransactionForm } from "@/components/forms/transaction-form"
+import { TransactionForm } from "@/app/add-transaction/_components/transaction-form"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
@@ -25,7 +25,29 @@ async function getCategories() {
   }
 }
 
+async function getFamilyOrGroups() {
+  const session = await getServerSession(authOptions)
+  try {
+    const res = await fetch(getApiUrl()+"/api/family", {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`
+      },
+    })
+    if (!res.ok) {
+        console.error("Failed to fetch family or groups status:", res.status)
+        return []
+    }
+    return res.json()
+  } catch (error) {
+    console.error("Failed to fetch family or groups:", error)
+    return []
+  }
+}
+
 export default async function AddTransactionPage() {
+
+  const familyOrGroups = await getFamilyOrGroups()
   const categories = await getCategories()
 
   return (
@@ -36,7 +58,7 @@ export default async function AddTransactionPage() {
           <p className="text-lg text-gray-500 dark:text-gray-400">Record a new expense or income</p>
         </div>
         
-        <TransactionForm categories={categories} />
+        <TransactionForm categories={categories} familyOrGroups={familyOrGroups} />
       </div>
     </div>
   )

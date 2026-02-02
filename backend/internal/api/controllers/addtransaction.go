@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 type Category struct {
@@ -31,13 +29,13 @@ type TransactionBody struct {
 }
 
 type TransactionResponse struct {
-	Id          int        `json:"id"`
-	UserId      int        `json:"userId"`
-	GroupId     *uuid.UUID `json:"groupId"`
-	CategoryId  string     `json:"categoryId"`
-	Amount      float64    `json:"amount"`
-	Date        string     `json:"date"`
-	Description string     `json:"description"`
+	Id          int     `json:"id"`
+	UserId      int     `json:"userId"`
+	GroupId     *int    `json:"groupId"`
+	CategoryId  string  `json:"categoryId"`
+	Amount      float64 `json:"amount"`
+	Date        string  `json:"date"`
+	Description string  `json:"description"`
 }
 
 func (h *AddTransactionHandler) GetCategoriesData(w http.ResponseWriter, r *http.Request) {

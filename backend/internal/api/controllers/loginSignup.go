@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -47,11 +48,12 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var familyID *int
 
 	// We verify email and grab the ID, Password, and Name
-	err := h.DB.QueryRow("SELECT id, password, name, family_id FROM users WHERE email=$1", creds.Email).Scan(&userID, &storedPass, &name, &familyID)
+	err := h.DB.QueryRow("SELECT id, password, name FROM users WHERE email=$1", creds.Email).Scan(&userID, &storedPass, &name)
 	if err == sql.ErrNoRows {
 		http.Error(w, "User not found", http.StatusUnauthorized)
 		return
 	} else if err != nil {
+		log.Println("Error fetching user:", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}

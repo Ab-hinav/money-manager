@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"; // Shadcn Button
@@ -9,38 +9,41 @@ import { Label } from "@/components/ui/label";   // Shadcn Label
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
+const initialState = {
+  success: false,
+  message: "",
+};
+
 export function LoginForm() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    // 1. Prevent default reload
-    event.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    // 2. Get Data using Native FormData API
-    const formData = new FormData(event.currentTarget);
+  
+  // Client-side action to be used with useActionState
+  async function loginAction(prevState: any, formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // 3. Call NextAuth
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false, // We handle redirect to avoid full page reload
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setError("Invalid email or password");
-      setIsLoading(false);
-    } else {
-      // 4. Success -> Dashboard
+      if (result?.error) {
+        return { success: false, message: "Invalid email or password" };
+      }
+
+      // Success - Redirect
       router.push("/dashboard");
       router.refresh();
+      return { success: true, message: "Login successful" }; // State update, though we redirect
+    } catch (error) {
+      console.error("Login Check Error:", error);
+      return { success: false, message: "An unexpected error occurred." };
     }
   }
+
+  const [state, formAction, isPending] = useActionState(loginAction, initialState);
 
   return (
     <div className="grid gap-6">
@@ -48,7 +51,7 @@ export function LoginForm() {
         <h1 className="text-2xl font-bold">Welcome Back</h1>
         <p className="text-sm text-gray-500">Please sign in to manage your finances.</p>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form action={formAction}>
         <div className="grid gap-4">
           {/* Email Field */}
           <div className="grid gap-2">
@@ -78,7 +81,7 @@ export function LoginForm() {
                 autoCapitalize="none"
                 autoComplete="email"
                 autoCorrect="off"
-                disabled={isLoading}
+                disabled={isPending}
                 required
                 className="pl-10 h-11 bg-gray-50 border-gray-200"
               />
@@ -117,7 +120,7 @@ export function LoginForm() {
                 type="password"
                 autoCapitalize="none"
                 autoCorrect="off"
-                disabled={isLoading}
+                disabled={isPending}
                 required
                 className="pl-10 h-11 bg-gray-50 border-gray-200 tracking-widest"
               />
@@ -125,15 +128,15 @@ export function LoginForm() {
           </div>
 
           {/* Error Message Display */}
-          {error && (
+          {state.message && !state.success && (
             <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded">
-              {error}
+              {state.message}
             </div>
           )}
 
           {/* Submit Button */}
-          <Button disabled={isLoading} className="w-full bg-teal-700 hover:bg-teal-800 h-11 text-base">
-            {isLoading ? (
+          <Button disabled={isPending} className="w-full bg-teal-700 hover:bg-teal-800 h-11 text-base">
+            {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Signing In...

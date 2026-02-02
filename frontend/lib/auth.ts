@@ -4,7 +4,7 @@ import { getApiUrl } from "./utils";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
-  pages: { signIn: "/login" 
+  pages: { signIn: "/" 
     ,signOut: "/",
     newUser: "/register"
   }, // Redirect here if unauthorized
