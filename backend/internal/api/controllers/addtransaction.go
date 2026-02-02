@@ -50,6 +50,7 @@ func (h *AddTransactionHandler) GetCategoriesData(w http.ResponseWriter, r *http
 				WHERE user_id = $1 OR user_id IS NULL`
 	rows, err := h.DB.Query(query, userID)
 	if err != nil {
+		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -58,6 +59,7 @@ func (h *AddTransactionHandler) GetCategoriesData(w http.ResponseWriter, r *http
 	for rows.Next() {
 		var category Category
 		if err := rows.Scan(&category.Id, &category.Name, &category.Icon, &category.Type); err != nil {
+			log.Println("Database error", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
@@ -84,6 +86,7 @@ func (h *AddTransactionHandler) AddTransaction(w http.ResponseWriter, r *http.Re
 	// parse the body
 	var transaction TransactionBody
 	if err := json.NewDecoder(r.Body).Decode(&transaction); err != nil {
+		log.Println("Database error", err)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
@@ -97,7 +100,7 @@ func (h *AddTransactionHandler) AddTransaction(w http.ResponseWriter, r *http.Re
 	err := h.DB.QueryRow(query, userID, transaction.GroupId, transaction.CategoryId, transaction.Amount, transaction.Date,
 		transaction.Description).Scan(&transactionResponse.Id, &transactionResponse.UserId, &transactionResponse.GroupId, &transactionResponse.CategoryId, &transactionResponse.Amount, &transactionResponse.Date, &transactionResponse.Description)
 	if err != nil {
-		log.Printf("Database error: %v", err)
+		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}

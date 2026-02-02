@@ -30,6 +30,7 @@ func (h *FamilyHandler) GetFamilyData(w http.ResponseWriter, r *http.Request) {
 
 	rows, err := h.DB.Query(query, userID)
 	if err != nil {
+		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -39,6 +40,7 @@ func (h *FamilyHandler) GetFamilyData(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var family Family
 		if err := rows.Scan(&family.Id, &family.Name, &family.Icon, &family.Type); err != nil {
+			log.Println("Database error", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
@@ -66,6 +68,7 @@ func (h *FamilyHandler) CreateFamily(w http.ResponseWriter, r *http.Request) {
 
 	var family Family
 	if err := json.NewDecoder(r.Body).Decode(&family); err != nil {
+		log.Println("Database error", err)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
@@ -75,7 +78,7 @@ func (h *FamilyHandler) CreateFamily(w http.ResponseWriter, r *http.Request) {
 	var familyResponse Family
 	err := h.DB.QueryRow(query, family.Name, family.Icon, family.Type).Scan(&familyResponse.Id, &familyResponse.Name, &familyResponse.Icon, &familyResponse.Type)
 	if err != nil {
-		log.Printf("Database error: %v", err)
+		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -83,7 +86,7 @@ func (h *FamilyHandler) CreateFamily(w http.ResponseWriter, r *http.Request) {
 	query2 := `INSERT INTO users_family (user_id, family_id) VALUES ($1, $2)`
 	_, err = h.DB.Exec(query2, userID, familyResponse.Id)
 	if err != nil {
-		log.Printf("Database error: %v", err)
+		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}

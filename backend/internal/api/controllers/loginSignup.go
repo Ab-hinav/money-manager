@@ -28,9 +28,8 @@ type Credentials struct {
 }
 
 type Claims struct {
-	Email    string `json:"email"`
-	UserID   int    `json:"user_id"`
-	FamilyID *int   `json:"family_id,omitempty"`
+	Email  string `json:"email"`
+	UserID int    `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
@@ -45,7 +44,6 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	// 1. Fetch User details
 	var storedPass, name string
 	var userID int
-	var familyID *int
 
 	// We verify email and grab the ID, Password, and Name
 	err := h.DB.QueryRow("SELECT id, password, name FROM users WHERE email=$1", creds.Email).Scan(&userID, &storedPass, &name)
@@ -67,9 +65,8 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	// 3. Generate JWT Token
 	expirationTime := time.Now().Add(time.Duration(utils.GetEnvInt("JWT_EXPIRY", 6)) * time.Hour)
 	claims := &Claims{
-		Email:    creds.Email,
-		UserID:   userID,
-		FamilyID: familyID,
+		Email:  creds.Email,
+		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
@@ -103,12 +100,14 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		log.Println("Invalid request body", err)
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	// Basic validation
 	if user.Email == "" || user.Password == "" || user.Name == "" {
+		log.Println("Missing required fields")
 		http.Error(w, "Missing required fields", http.StatusBadRequest)
 		return
 	}
@@ -117,9 +116,11 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	var existingID int
 	err := h.DB.QueryRow("SELECT id FROM users WHERE email=$1", user.Email).Scan(&existingID)
 	if err == nil {
+		log.Println("User already exists")
 		http.Error(w, "User already exists", http.StatusConflict)
 		return
 	} else if err != sql.ErrNoRows {
+		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -127,6 +128,7 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	// 2. Hash Password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
+		log.Println("Error processing password", err)
 		http.Error(w, "Error processing password", http.StatusInternalServerError)
 		return
 	}
@@ -139,6 +141,7 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	).Scan(&newUserID)
 
 	if err != nil {
+		log.Println("Error creating user", err)
 		http.Error(w, "Error creating user", http.StatusInternalServerError)
 		return
 	}
@@ -146,7 +149,7 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	// 4. Return Success
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	json.NewEncoder(w).Encode(map[string]any{
 		"message": "User registered successfully",
 		"user_id": newUserID,
 	})
