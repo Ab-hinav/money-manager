@@ -112,6 +112,16 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !utils.IsValidEmail(user.Email) {
+		http.Error(w, "Invalid email format", http.StatusBadRequest)
+		return
+	}
+
+	if !utils.IsStrongPassword(user.Password) {
+		http.Error(w, "Password must be at least 8 characters", http.StatusBadRequest)
+		return
+	}
+
 	// 1. Check if user already exists
 	var existingID int
 	err := h.DB.QueryRow("SELECT id FROM users WHERE email=$1", user.Email).Scan(&existingID)
