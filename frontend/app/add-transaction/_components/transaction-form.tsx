@@ -3,8 +3,8 @@
 import * as React from "react"
 import { useActionState } from "react"
 import { createTransaction } from "@/app/actions/transaction"
-import { ChevronDown, Plus, Home, Briefcase, Plane } from "lucide-react"
-import { cn, getApiUrl } from "@/lib/utils"
+import { ChevronDown, Plus } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -28,7 +28,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Loader2, CheckCircle2, XCircle } from "lucide-react"
-import { useSession } from "next-auth/react"
 
 export type Category = {
   id: string
