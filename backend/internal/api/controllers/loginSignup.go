@@ -5,18 +5,14 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/Ab-hinav/money-manager/internal/config"
 	"github.com/Ab-hinav/money-manager/internal/utils"
 )
-
-// Re-declare jwtKey here or import from a shared config package
-// For simplicity in this snippet, we assume it's available or duplicated.
-var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 type AuthHandler struct {
 	DB *sql.DB
@@ -72,7 +68,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(config.GetJWTKey())
 	if err != nil {
 		http.Error(w, "Error generating token", http.StatusInternalServerError)
 		return
