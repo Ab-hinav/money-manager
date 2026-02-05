@@ -237,29 +237,33 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
 
             {/* Amount Input */}
             <div className="text-center space-y-2 py-4">
-              <Label className="text-emerald-600 font-medium">Total Amount</Label>
+              <Label htmlFor="amount-input" className="text-emerald-600 font-medium">Total Amount</Label>
               <div className="relative flex items-center justify-center">
                 <span className="text-4xl font-bold text-gray-400 mr-2">₹</span>
                 <input
+                  id="amount-input"
+                  inputMode="decimal"
                   type="text"
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="text-6xl font-bold text-center bg-transparent border-none focus:outline-none w-full placeholder:text-gray-200 text-gray-900 dark:text-white p-0"
+                  aria-invalid={!!state.errors?.amount}
+                  aria-describedby={state.errors?.amount ? "amount-error" : undefined}
                 />
               </div>
               {state.errors?.amount && (
-                <p className="text-sm text-red-500 font-medium animate-in fade-in slide-in-from-top-1">{state.errors.amount[0]}</p>
+                <p id="amount-error" className="text-sm text-red-500 font-medium animate-in fade-in slide-in-from-top-1">{state.errors.amount[0]}</p>
               )}
             </div>
 
             {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</Label>
+                <Label id="category-label" className="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</Label>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" type="button" className="w-full justify-between h-12 bg-gray-50 border-gray-100 text-gray-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-gray-300">
+                    <Button aria-labelledby="category-label" variant="outline" type="button" className="w-full justify-between h-12 bg-gray-50 border-gray-100 text-gray-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-gray-300">
                       <div className="flex items-center gap-2">
                         {category ? (
                           <>
@@ -288,9 +292,10 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Date</Label>
+                <Label htmlFor="date-input" className="text-xs font-bold text-gray-500 uppercase tracking-wider">Date</Label>
                 <div className="relative">
                   <Input 
+                    id="date-input"
                     type="date" 
                     name="date"
                     value={date}
@@ -299,16 +304,19 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
                       "h-12 bg-gray-50 border-gray-100 dark:bg-zinc-800 dark:border-zinc-700",
                       state.errors?.date && "border-red-500 focus-visible:ring-red-500"
                     )} 
+                    aria-invalid={!!state.errors?.date}
+                    aria-describedby={state.errors?.date ? "date-error" : undefined}
                   />
                   {state.errors?.date && (
-                    <p className="text-xs text-red-500 mt-1">{state.errors.date[0]}</p>
+                    <p id="date-error" className="text-xs text-red-500 mt-1">{state.errors.date[0]}</p>
                   )}
                 </div>
               </div>
 
               <div className="space-y-2 md:col-span-2">
-                <Label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description</Label>
+                <Label htmlFor="description-input" className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description</Label>
                 <Input 
+                  id="description-input"
                   name="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
