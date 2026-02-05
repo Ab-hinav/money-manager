@@ -3,9 +3,9 @@ package api
 import (
 	"context"
 	"net/http"
-	"os"
 	"strings"
 
+	"github.com/Ab-hinav/money-manager/internal/config"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -15,8 +15,6 @@ type Claims struct {
 	FamilyID *int   `json:"family_id,omitempty"`
 	jwt.RegisteredClaims
 }
-
-var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 // AuthMiddleware validates the Bearer Token from the Header
 func AuthMiddleware(next http.Handler) http.Handler {
@@ -38,7 +36,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		// 3. Parse & Validate Token
 		claims := &Claims{}
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+			return config.GetJWTKey(), nil
 		})
 
 		if err != nil || !token.Valid {
