@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Ab-hinav/money-manager/internal/api/controllers"
+	"github.com/Ab-hinav/money-manager/internal/config"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -20,7 +21,7 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	r.Use(middleware.Compress(5))
 	r.Use(cors.Handler(cors.Options{
 		// Allow Next.js (port 3000) and your CloudFront URL
-		AllowedOrigins:   []string{"http://localhost:3000", "http://127.0.0.1:3000", "https://*"},
+		AllowedOrigins:   config.GetAllowedOrigins(),
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
