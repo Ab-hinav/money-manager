@@ -4,14 +4,12 @@ import { authOptions } from "@/lib/auth"
 
 import { getApiUrl } from "@/lib/utils";
 
-async function getCategories() {
-  const session = await getServerSession(authOptions)
-  console.log("Session:", session)
+async function getCategories(accessToken: string | undefined) {
   try {
     const res = await fetch(getApiUrl()+"/api/categories", {
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${accessToken}`
       },
     })
     if (!res.ok) {
@@ -25,13 +23,12 @@ async function getCategories() {
   }
 }
 
-async function getFamilyOrGroups() {
-  const session = await getServerSession(authOptions)
+async function getFamilyOrGroups(accessToken: string | undefined) {
   try {
     const res = await fetch(getApiUrl()+"/api/family", {
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${accessToken}`
       },
     })
     if (!res.ok) {
@@ -46,11 +43,12 @@ async function getFamilyOrGroups() {
 }
 
 export default async function AddTransactionPage() {
+  const session = await getServerSession(authOptions)
 
   // Parallelize the fetching of family groups and categories to improve performance
   const [familyOrGroups, categories] = await Promise.all([
-    getFamilyOrGroups(),
-    getCategories(),
+    getFamilyOrGroups(session?.accessToken),
+    getCategories(session?.accessToken),
   ])
 
   return (
