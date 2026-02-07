@@ -91,6 +91,13 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
   const [date, setDate] = React.useState("")
   const [description, setDescription] = React.useState("")
 
+  // Set default date to today
+  React.useEffect(() => {
+    const today = new Date()
+    const formattedDate = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0')
+    setDate(formattedDate)
+  }, [])
+
   // Update selected category when type changes or categories load
   React.useEffect(() => {
     if (currentCategories.length > 0) {
@@ -242,6 +249,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
                 <span className="text-4xl font-bold text-gray-400 mr-2">₹</span>
                 <input
                   id="amount-input"
+                  autoFocus
                   inputMode="decimal"
                   type="text"
                   placeholder="0.00"
