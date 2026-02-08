@@ -44,7 +44,8 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	// We verify email and grab the ID, Password, and Name
 	err := h.DB.QueryRow("SELECT id, password, name FROM users WHERE email=$1", creds.Email).Scan(&userID, &storedPass, &name)
 	if err == sql.ErrNoRows {
-		http.Error(w, "User not found", http.StatusUnauthorized)
+		// Use generic error message to prevent user enumeration
+		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
 		return
 	} else if err != nil {
 		log.Println("Error fetching user:", err)
@@ -54,7 +55,8 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	// 2. Check Password
 	if err := bcrypt.CompareHashAndPassword([]byte(storedPass), []byte(creds.Password)); err != nil {
-		http.Error(w, "Invalid password", http.StatusUnauthorized)
+		// Use generic error message to prevent user enumeration
+		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
 		return
 	}
 
