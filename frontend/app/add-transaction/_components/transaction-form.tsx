@@ -149,6 +149,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
         <button
           onClick={() => setScope("personal")}
           type="button"
+          aria-pressed={scope === "personal"}
           className={cn(
             "flex-1 py-2 text-sm font-medium rounded-full transition-all",
             scope === "personal"
@@ -161,6 +162,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
         <button
           onClick={() => setScope("family")}
           type="button"
+          aria-pressed={scope === "family"}
           className={cn(
             "flex-1 py-2 text-sm font-medium rounded-full transition-all",
             scope === "family"
@@ -217,6 +219,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
                   key={type}
                   type="button"
                   onClick={() => setTransactionType(type.toLowerCase())}
+                  aria-pressed={transactionType === type.toLowerCase()}
                   className={cn(
                     "flex-1 pb-4 text-sm font-medium transition-all relative",
                     transactionType === type.toLowerCase()
@@ -334,7 +337,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
               disabled={isPending}
               className="w-full h-14 text-lg font-medium bg-emerald-500 hover:bg-emerald-600 text-white rounded-full mt-4 shadow-lg shadow-emerald-200 dark:shadow-none transition-all hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Plus className="w-5 h-5 mr-2" />}
+              {isPending ? <Loader2 aria-hidden="true" className="w-5 h-5 mr-2 animate-spin" /> : <Plus aria-hidden="true" className="w-5 h-5 mr-2" />}
               {getSubmitButtonText()}
             </Button>
           </form>
