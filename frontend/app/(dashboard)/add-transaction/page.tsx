@@ -1,4 +1,4 @@
-import { TransactionForm } from "@/app/add-transaction/_components/transaction-form"
+import { TransactionForm } from "@/app/(dashboard)/add-transaction/_components/transaction-form"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 

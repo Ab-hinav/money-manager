@@ -31,59 +31,44 @@ export function Navbar() {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {status === "loading" ? (
-             <>
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-20" />
-             </>
-          ) : session ? (
-            <>
-              <Link href="/dashboard" className="hover:text-teal-600 transition-colors">Dashboard</Link>
-              <Link href="/family" className="hover:text-teal-600 transition-colors">Family</Link>
-              <Link href="/add-transaction" className="hover:text-teal-600 transition-colors">Add Transaction</Link>
-              <Link href="/analytics" className="hover:text-teal-600 transition-colors">Analytics</Link>
-              <Link href="/settings" className="hover:text-teal-600 transition-colors">Settings</Link>
-            </>
-          ) : (
-            <>
-              <Link href="#features" className="hover:text-teal-600 transition-colors">Features</Link>
-              <Link href="#about" className="hover:text-teal-600 transition-colors">About</Link>
-            </>
-          )}
+            <Link href="#features" className="hover:text-teal-600 transition-colors">Features</Link>
+            <Link href="#about" className="hover:text-teal-600 transition-colors">About</Link>
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
           {status === "loading" ? (
              <Skeleton className="h-8 w-8 rounded-full" />
           ) : session ? (
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
-                    <AvatarFallback>{session.user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
-                  </Avatar>
+             <>
+                <Button variant="ghost" asChild>
+                    <Link href="/dashboard">Dashboard</Link>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{session.user?.name}</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {session.user?.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                 <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={session.user?.image || ""} alt={session.user?.name || ""} />
+                        <AvatarFallback>{session.user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{session.user?.name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {session.user?.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => signOut()}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+             </>
           ) : (
             <>
               <Button variant="ghost" asChild>
@@ -111,9 +96,16 @@ export function Navbar() {
               </SheetDescription>
             </SheetHeader>
             <div className="flex flex-col gap-6 mt-10 px-6">
+               <Link href="#features" onClick={() => setOpen(false)} className="text-lg font-medium hover:text-teal-600">
+                 Features
+               </Link>
+               <Link href="#about" onClick={() => setOpen(false)} className="text-lg font-medium hover:text-teal-600">
+                 About
+               </Link>
+
               {status === "loading" ? (
                  <>
-                   <div className="flex items-center gap-3 mb-4">
+                   <div className="flex items-center gap-3 mb-4 mt-4">
                      <Skeleton className="h-10 w-10 rounded-full" />
                       <div className="space-y-2">
                         <Skeleton className="h-4 w-24" />
@@ -121,14 +113,10 @@ export function Navbar() {
                       </div>
                    </div>
                    <Skeleton className="h-6 w-full" />
-                   <Skeleton className="h-6 w-full" />
-                   <Skeleton className="h-6 w-full" />
-                   <Skeleton className="h-6 w-full" />
-                   <Skeleton className="h-6 w-full" />
                  </>
               ) : session ? (
                 <>
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-4 mt-4">
                      <Avatar className="h-10 w-10">
                         <AvatarImage src={session.user?.image || ""} />
                         <AvatarFallback>{session.user?.name?.[0]?.toUpperCase()}</AvatarFallback>
@@ -141,39 +129,19 @@ export function Navbar() {
                   <Link href="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
                     <LayoutDashboard className="h-5 w-5" /> Dashboard
                   </Link>
-                  <Link href="/family" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
-                    <Users className="h-5 w-5" /> Family
-                  </Link>
-                  <Link href="/add-transaction" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
-                    <PlusCircle className="h-5 w-5" /> Add Transaction
-                  </Link>
-                  <Link href="/analytics" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
-                    <BarChart3 className="h-5 w-5" /> Analytics
-                  </Link>
-                  <Link href="/settings" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
-                    <Settings className="h-5 w-5" /> Settings
-                  </Link>
                   <Button variant="outline" className="w-full mt-4" onClick={() => { setOpen(false); signOut(); }}>
                     <LogOut className="mr-2 h-4 w-4" /> Log out
                   </Button>
                 </>
               ) : (
-                <>
-                  <Link href="#features" onClick={() => setOpen(false)} className="text-lg font-medium hover:text-teal-600">
-                    Features
-                  </Link>
-                  <Link href="#about" onClick={() => setOpen(false)} className="text-lg font-medium hover:text-teal-600">
-                    About
-                  </Link>
-                   <div className="flex flex-col gap-3 mt-4 w-full">
+                <div className="flex flex-col gap-3 mt-4 w-full">
                     <Button variant="outline" asChild className="w-full" onClick={() => setOpen(false)}>
                       <Link href="/login">Log in</Link>
                     </Button>
                     <Button className="bg-teal-600 hover:bg-teal-700 text-white w-full" onClick={() => setOpen(false)}>
                       <Link href="/register">Sign Up</Link>
                     </Button>
-                  </div>
-                </>
+                </div>
               )}
             </div>
           </SheetContent>
