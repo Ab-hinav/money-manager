@@ -3,3 +3,14 @@ dist
 .next
 .pnpm-store
 coverage
+.env
+money-key.pem
+.agent
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+.terraform.lock.hcl
+.Jules
+.jules
+.github
+package-lock.json
