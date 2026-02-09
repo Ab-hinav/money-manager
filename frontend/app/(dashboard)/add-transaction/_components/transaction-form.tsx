@@ -54,6 +54,14 @@ const initialState = {
   errors: {}
 }
 
+function getTodayDate() {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, "0")
+  const day = String(today.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
 export function TransactionForm({ categories = [], familyOrGroups = [] }: TransactionFormProps) {
 
   const [state, formAction, isPending] = useActionState(createTransaction, initialState)
@@ -91,6 +99,10 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
   const [date, setDate] = React.useState("")
   const [description, setDescription] = React.useState("")
 
+  React.useEffect(() => {
+    setDate(getTodayDate())
+  }, [])
+
   // Update selected category when type changes or categories load
   React.useEffect(() => {
     if (currentCategories.length > 0) {
@@ -125,7 +137,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
 
   const resetForm = () => {
     setAmount("")
-    setDate("")
+    setDate(getTodayDate())
     setDescription("")
     // Reset category to first available if exists
     if (currentCategories.length > 0) {
