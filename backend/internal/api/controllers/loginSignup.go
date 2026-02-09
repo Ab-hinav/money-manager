@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -42,6 +43,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var userID int
 
 	// We verify email and grab the ID, Password, and Name
+	creds.Email = strings.ToLower(creds.Email)
 	err := h.DB.QueryRow("SELECT id, password, name FROM users WHERE email=$1", creds.Email).Scan(&userID, &storedPass, &name)
 	if err == sql.ErrNoRows {
 		// Use generic error message to prevent user enumeration
@@ -112,6 +114,7 @@ func (h *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 
 	// 1. Check if user already exists
 	var existingID int
+	user.Email = strings.ToLower(user.Email)
 	err := h.DB.QueryRow("SELECT id FROM users WHERE email=$1", user.Email).Scan(&existingID)
 	if err == nil {
 		log.Println("User already exists")

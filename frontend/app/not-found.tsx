@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FileQuestion } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function NotFound() {
+  const { data: session } = useSession();
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center px-4">
       <div className="bg-teal-50 p-4 rounded-full mb-6">
@@ -12,8 +17,10 @@ export default function NotFound() {
       <p className="text-muted-foreground mb-8 max-w-md">
         Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been moved or deleted.
       </p>
-      <Button asChild className="bg-teal-600 hover:bg-teal-700">
-        <Link href="/">Go Back Home</Link>
+      <Button asChild className="bg-teal-600 hover:bg-teal-700 text-white">
+        <Link href={session ? "/dashboard" : "/"}>
+          {session ? "Back to Dashboard" : "Go Back Home"}
+        </Link>
       </Button>
     </div>
   );
