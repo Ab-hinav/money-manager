@@ -16,6 +16,8 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	// 1. Global Middlewares
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	// Enable GZIP compression for responses
+	r.Use(middleware.Compress(5))
 	r.Use(cors.Handler(cors.Options{
 		// Allow Next.js (port 3000) and your CloudFront URL
 		AllowedOrigins:   []string{"http://localhost:3000", "http://127.0.0.1:3000", "https://*"},

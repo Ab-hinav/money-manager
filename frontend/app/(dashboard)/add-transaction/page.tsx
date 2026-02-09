@@ -47,8 +47,11 @@ async function getFamilyOrGroups() {
 
 export default async function AddTransactionPage() {
 
-  const familyOrGroups = await getFamilyOrGroups()
-  const categories = await getCategories()
+  // Parallelize the fetching of family groups and categories to improve performance
+  const [familyOrGroups, categories] = await Promise.all([
+    getFamilyOrGroups(),
+    getCategories(),
+  ])
 
   return (
     <div className="min-h-screen bg-gray-50/50 dark:bg-zinc-950/50 py-12 px-4 sm:px-6 lg:px-8">

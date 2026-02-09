@@ -397,10 +397,12 @@ function GroupCard({ icon, title, subtitle, selected, onClick, color }: {
   color: string
 }) {
   return (
-    <div 
+    <button
+      type="button"
       onClick={onClick}
+      aria-pressed={selected}
       className={cn(
-        "cursor-pointer rounded-xl p-4 transition-all duration-200 border-2",
+        "w-full text-left cursor-pointer rounded-xl p-4 transition-all duration-200 border-2",
         selected 
           ? "border-emerald-500 bg-white dark:bg-zinc-900 shadow-md transform scale-[1.02]" 
           : "border-transparent bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800"
@@ -414,6 +416,6 @@ function GroupCard({ icon, title, subtitle, selected, onClick, color }: {
       </div>
       <h4 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h4>
       <p className="text-xs text-gray-500">{subtitle}</p>
-    </div>
+    </button>
   )
 }
