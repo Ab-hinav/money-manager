@@ -1,11 +1,12 @@
 import { TransactionForm } from "@/app/(dashboard)/add-transaction/_components/transaction-form"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import { Session } from "next-auth"
 
 import { getApiUrl } from "@/lib/utils";
 
-async function getCategories() {
-  const session = await getServerSession(authOptions)
+async function getCategories(session: Session | null) {
   console.log("Session:", session)
   try {
     const res = await fetch(getApiUrl()+"/api/categories", {
@@ -25,8 +26,7 @@ async function getCategories() {
   }
 }
 
-async function getFamilyOrGroups() {
-  const session = await getServerSession(authOptions)
+async function getFamilyOrGroups(session: Session | null) {
   try {
     const res = await fetch(getApiUrl()+"/api/family", {
       cache: "no-store",
@@ -46,11 +46,16 @@ async function getFamilyOrGroups() {
 }
 
 export default async function AddTransactionPage() {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    redirect("/api/auth/signin")
+  }
 
   // Parallelize the fetching of family groups and categories to improve performance
   const [familyOrGroups, categories] = await Promise.all([
-    getFamilyOrGroups(),
-    getCategories(),
+    getFamilyOrGroups(session),
+    getCategories(session),
   ])
 
   return (
