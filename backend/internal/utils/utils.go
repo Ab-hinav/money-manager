@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	_ "time/tzdata" // Embed timezone data
 )
 
 func GetEnvInt(key string, defaultVal int) int {
@@ -26,7 +27,11 @@ func DateValidation(dateFrom string, dateTo string) bool {
 	// 1 are dates parsable
 	// from should be less than to
 
-	loc, _ := time.LoadLocation("Asia/Kolkata")
+	loc, err := time.LoadLocation("Asia/Kolkata")
+	if err != nil {
+		log.Printf("Error loading location, defaulting to UTC: %v", err)
+		loc = time.Local
+	}
 
 	from, err := time.ParseInLocation("2006-01-02", dateFrom, loc)
 	if err != nil {

@@ -20,6 +20,7 @@ RUN go build -o main ./cmd/server
 # Run Stage (Keep this lightweight)
 FROM alpine:latest
 WORKDIR /root/
+RUN apk add --no-cache tzdata
 COPY --from=builder /app/main .
 EXPOSE 8080
 CMD ["./main"]
