@@ -93,7 +93,7 @@ export async function getCategories() {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.accessToken) {
-    return { success: false, message: "Unauthorized: Please log in." };
+    return [];
   }
 
   try {
@@ -113,16 +113,13 @@ export async function getCategories() {
     if (!res.ok) {
         const errorText = await res.text();
         console.error(`[Server Action] Failed: ${res.status} ${errorText}`);
-        return { success: false, message: `Failed to fetch categories: ${res.statusText}` };
+        return [];
     }
 
     return res.json();
   } catch (error) {
     console.error("[Server Action] Error:", error);
-    return { 
-        success: false, 
-        message: error instanceof Error ? error.message : "An unknown error occurred" 
-    };
+    return [];
   }
 }
 

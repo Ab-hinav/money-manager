@@ -18,6 +18,7 @@ async function getTotalBalance(start: string , end: string) {
     const url = `${backendUrl}/api/dashboard/total-balance?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
       method: "GET",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${session.accessToken}`,
@@ -52,6 +53,7 @@ async function getTotalIncome(start: string , end: string) {
     const url = `${backendUrl}/api/dashboard/total-income?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
       method: "GET",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${session.accessToken}`,
@@ -85,6 +87,7 @@ async function getTotalExpenses(start: string , end: string) {
     const url = `${backendUrl}/api/dashboard/total-expenses?fromDate=${start}&toDate=${end}&monthlyData=false`;
     const res = await fetch(url, {
       method: "GET",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${session.accessToken}`,
@@ -120,6 +123,7 @@ async function getTotalInvestments(start: string , end: string) {
     const url = `${backendUrl}/api/dashboard/total-investment?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
       method: "GET",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${session.accessToken}`,
@@ -157,6 +161,7 @@ async function getTotalLoans(start: string , end: string) {
     const url = `${backendUrl}/api/dashboard/total-loans?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
       method: "GET",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${session.accessToken}`,
