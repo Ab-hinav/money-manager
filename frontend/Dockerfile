@@ -3,9 +3,10 @@ FROM node:23-alpine AS base
 # Install dependencies only when needed
 FROM base AS deps
 WORKDIR /app
-COPY package.json package-lock.json* ./
+COPY package.json ./
 # Upgrade npm to handle newer lockfile versions
 RUN npm install -g npm@latest
+RUN npm i
 RUN npm ci
 
 # Rebuild the source code only when needed
