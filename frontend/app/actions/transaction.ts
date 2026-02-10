@@ -29,6 +29,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
     description: formData.get("description"),
     scope: formData.get("scope"),
     groupId: formData.get("groupId"),
+    goalId: formData.get("goalId"),
   };
 
   // Basic Validation (You can enhance this with Zod)
@@ -50,6 +51,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
     description: rawData.description,
     scope: rawData.scope,
     groupId: rawData.groupId,
+    goalId: rawData.goalId ? parseInt(rawData.goalId as string) : null,
   };
 
   try {
@@ -84,5 +86,83 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
         success: false, 
         message: error instanceof Error ? error.message : "An unknown error occurred" 
     };
+  }
+}
+
+export async function getCategories() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.accessToken) {
+    return { success: false, message: "Unauthorized: Please log in." };
+  }
+
+  try {
+    const backendUrl = getApiUrl(); // On server, this uses internal URL
+    const url = `${backendUrl}/api/categories`;
+
+    console.log(`[Server Action] Submitting Transaction to: ${url}`);
+
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`[Server Action] Failed: ${res.status} ${errorText}`);
+        return { success: false, message: `Failed to fetch categories: ${res.statusText}` };
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("[Server Action] Error:", error);
+    return { 
+        success: false, 
+        message: error instanceof Error ? error.message : "An unknown error occurred" 
+    };
+  }
+}
+
+
+export async function getFamilyOrGroups() {
+  const session = await getServerSession(authOptions)
+  try {
+    const res = await fetch(getApiUrl()+"/api/family", {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`
+      },
+    })
+    if (!res.ok) {
+        console.error("Failed to fetch family or groups status:", res.status)
+        return []
+    }
+    return res.json()
+  } catch (error) {
+    console.error("Failed to fetch family or groups:", error)
+    return []
+  }
+}
+
+export async function getGoals() {
+  const session = await getServerSession(authOptions)
+  try {
+    const res = await fetch(getApiUrl()+"/api/goals", {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`
+      },
+    })
+    if (!res.ok) {
+        console.error("Failed to fetch goals status:", res.status)
+        return []
+    }
+    return res.json()
+  } catch (error) {
+    console.error("Failed to fetch goals:", error)
+    return []
   }
 }

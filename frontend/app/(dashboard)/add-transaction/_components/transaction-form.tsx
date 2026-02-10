@@ -43,9 +43,17 @@ export type FamilyOrGroup = {
   icon: string
 }
 
+export type Goal = {
+  id: number
+  name: string
+  icon: string
+  color: string
+}
+
 interface TransactionFormProps {
   categories: Category[]
   familyOrGroups: FamilyOrGroup[]
+  goals?: Goal[]
 }
 
 const initialState = {
@@ -54,9 +62,11 @@ const initialState = {
   errors: {}
 }
 
-export function TransactionForm({ categories = [], familyOrGroups = [] }: TransactionFormProps) {
+export function TransactionForm({ categories = [], familyOrGroups = [], goals = [] }: TransactionFormProps) {
 
   const [state, formAction, isPending] = useActionState(createTransaction, initialState)
+  
+  const [selectedGoal, setSelectedGoal] = React.useState<string>("")
   
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
   // Use state.message or internal state for dialog message
@@ -126,7 +136,9 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
   const resetForm = () => {
     setAmount("")
     setDate("")
+    setDate("")
     setDescription("")
+    setSelectedGoal("")
     // Reset category to first available if exists
     if (currentCategories.length > 0) {
       setCategory(currentCategories[0])
@@ -207,6 +219,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
             <input type="hidden" name="categoryId" value={category?.id || ""} />
             <input type="hidden" name="scope" value={scope} />
             <input type="hidden" name="groupId" value={selectedGroup} />
+            <input type="hidden" name="goalId" value={selectedGoal} />
             <input type="hidden" name="amount" value={amount} /> {/* Controlled input mirror */}
 
             {/* Transaction Type Tabs */}
@@ -325,6 +338,44 @@ export function TransactionForm({ categories = [], familyOrGroups = [] }: Transa
                     "h-12 bg-gray-50 border-gray-100 dark:bg-zinc-800 dark:border-zinc-700 placeholder:text-gray-400"
                   )}
                 />
+              </div>
+
+              <div className="space-y-2 md:col-span-2">
+                <Label id="goal-label" className="text-xs font-bold text-gray-500 uppercase tracking-wider">Goal (Optional)</Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-labelledby="goal-label" variant="outline" type="button" className="w-full justify-between h-12 bg-gray-50 border-gray-100 text-gray-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-gray-300">
+                      <div className="flex items-center gap-2">
+                        {selectedGoal ? (
+                           (() => {
+                            const g = goals.find(goal => goal.id.toString() === selectedGoal)
+                            return g ? (
+                                <>
+                                <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">{g.icon}</span>
+                                {g.name}
+                                </>
+                            ) : <span>Select Goal</span>
+                           })()
+                        ) : (
+                          <span>Select Goal</span>
+                        )}
+                      </div>
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[240px] h-[300px] overflow-y-auto">
+                      <DropdownMenuItem onClick={() => setSelectedGoal("")}>
+                        <span className="mr-2">🚫</span>
+                        None
+                      </DropdownMenuItem>
+                      {goals && goals.length > 0 && goals.map((g) => (
+                          <DropdownMenuItem key={g.id} onClick={() => setSelectedGoal(g.id.toString())}>
+                              <span className="mr-2 text-lg">{g.icon}</span>
+                              {g.name}
+                          </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 

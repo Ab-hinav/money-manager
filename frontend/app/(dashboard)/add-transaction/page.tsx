@@ -1,56 +1,18 @@
 import { TransactionForm } from "@/app/(dashboard)/add-transaction/_components/transaction-form"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
 
-import { getApiUrl } from "@/lib/utils";
+import { getCategories } from "@/app/actions/transaction";
+import { getFamilyOrGroups } from "@/app/actions/transaction";
+import { getGoals } from "@/app/actions/transaction";
 
-async function getCategories() {
-  const session = await getServerSession(authOptions)
-  console.log("Session:", session)
-  try {
-    const res = await fetch(getApiUrl()+"/api/categories", {
-      cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`
-      },
-    })
-    if (!res.ok) {
-        console.error("Failed to fetch categories status:", res.status)
-        return []
-    }
-    return res.json()
-  } catch (error) {
-    console.error("Failed to fetch categories:", error)
-    return []
-  }
-}
 
-async function getFamilyOrGroups() {
-  const session = await getServerSession(authOptions)
-  try {
-    const res = await fetch(getApiUrl()+"/api/family", {
-      cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`
-      },
-    })
-    if (!res.ok) {
-        console.error("Failed to fetch family or groups status:", res.status)
-        return []
-    }
-    return res.json()
-  } catch (error) {
-    console.error("Failed to fetch family or groups:", error)
-    return []
-  }
-}
 
 export default async function AddTransactionPage() {
 
   // Parallelize the fetching of family groups and categories to improve performance
-  const [familyOrGroups, categories] = await Promise.all([
+  const [familyOrGroups, categories, goals] = await Promise.all([
     getFamilyOrGroups(),
     getCategories(),
+    getGoals(),
   ])
 
   return (
@@ -61,7 +23,7 @@ export default async function AddTransactionPage() {
           <p className="text-lg text-gray-500 dark:text-gray-400">Record a new expense or income</p>
         </div>
         
-        <TransactionForm categories={categories} familyOrGroups={familyOrGroups} />
+        <TransactionForm categories={categories} familyOrGroups={familyOrGroups} goals={goals} />
       </div>
     </div>
   )

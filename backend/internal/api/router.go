@@ -20,7 +20,7 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	r.Use(middleware.Compress(5))
 	r.Use(cors.Handler(cors.Options{
 		// Allow Next.js (port 3000) and your CloudFront URL
-		AllowedOrigins:   []string{"http://localhost:3000", "http://127.0.0.1:3000", "https://*"},
+		AllowedOrigins:   []string{"http://localhost:3000", "http://money-manager-frontend:80"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
@@ -32,6 +32,8 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	authHandler := &controllers.AuthHandler{DB: db}
 	addTransactionHandler := &controllers.AddTransactionHandler{DB: db}
 	familyHandler := &controllers.FamilyHandler{DB: db}
+	dashboardHandler := &controllers.DashboardHandler{DB: db}
+	goalHandler := &controllers.GoalHandler{DB: db}
 
 	// 3. API Routes
 	r.Route("/api", func(r chi.Router) {
@@ -57,12 +59,23 @@ func NewRouter(db *sql.DB) *chi.Mux {
 				r.Post("/", familyHandler.CreateFamily)
 			})
 
+			r.Route("/goals", func(r chi.Router) {
+				r.Get("/", goalHandler.GetGoals)
+				r.Post("/", goalHandler.CreateGoal)
+			})
+
 			// Dashboard
-			r.Get("/dashboard", func(w http.ResponseWriter, r *http.Request) {
+			r.Route("/dashboard", func(r chi.Router) {
 				// We can access user info from context now
-				userID := r.Context().Value("user_id").(int)
+
+				r.Get("/total-income", dashboardHandler.GetTotalIncome)
+				r.Get("/total-expenses", dashboardHandler.GetTotalExpenses)
+				r.Get("/total-savings", dashboardHandler.GetTotalSavings)
+				r.Get("/total-loans", dashboardHandler.GetTotalLoans)
+				r.Get("/total-balance", dashboardHandler.GetTotalBalance)
+				r.Get("/total-investment", dashboardHandler.GetTotalInvestments)
 				// TODO: Fetch real data for this user
-				w.Write([]byte("Welcome to the Protected Dashboard! User ID: " + string(rune(userID))))
+
 			})
 
 			// Transactions

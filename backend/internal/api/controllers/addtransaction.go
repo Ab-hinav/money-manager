@@ -26,6 +26,7 @@ type TransactionBody struct {
 	Description string  `json:"description"`
 	Scope       string  `json:"scope"`
 	GroupId     *string `json:"groupId"`
+	GoalId      *int    `json:"goalId"`
 }
 
 type TransactionResponse struct {
@@ -36,6 +37,7 @@ type TransactionResponse struct {
 	Amount      float64 `json:"amount"`
 	Date        string  `json:"date"`
 	Description string  `json:"description"`
+	GoalId      *int    `json:"goalId"`
 }
 
 func (h *AddTransactionHandler) GetCategoriesData(w http.ResponseWriter, r *http.Request) {
@@ -93,12 +95,12 @@ func (h *AddTransactionHandler) AddTransaction(w http.ResponseWriter, r *http.Re
 	log.Println("Transaction Body", transaction)
 
 	// insert the transaction into the database
-	query := `INSERT INTO transactions (user_id,family_id, category_id, amount, transaction_date, description) 
-				VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, user_id, family_id, category_id, amount, transaction_date, description`
+	query := `INSERT INTO transactions (user_id,family_id, category_id, amount, transaction_date, description,goal_id) 
+				VALUES ($1, $2, $3, $4, $5, $6,$7) RETURNING id, user_id, family_id, category_id, amount, transaction_date, description,goal_id`
 
 	var transactionResponse TransactionResponse
 	err := h.DB.QueryRow(query, userID, transaction.GroupId, transaction.CategoryId, transaction.Amount, transaction.Date,
-		transaction.Description).Scan(&transactionResponse.Id, &transactionResponse.UserId, &transactionResponse.GroupId, &transactionResponse.CategoryId, &transactionResponse.Amount, &transactionResponse.Date, &transactionResponse.Description)
+		transaction.Description, transaction.GoalId).Scan(&transactionResponse.Id, &transactionResponse.UserId, &transactionResponse.GroupId, &transactionResponse.CategoryId, &transactionResponse.Amount, &transactionResponse.Date, &transactionResponse.Description, &transactionResponse.GoalId)
 	if err != nil {
 		log.Println("Database error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
