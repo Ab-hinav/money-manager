@@ -224,3 +224,86 @@ Frontend (Next.js): Initialize the app, build the "Login" screen. Dockerize it.
 Orchestration (Kubernetes): Write the YAML files to deploy both containers to the EC2.
 Polish: Connect the Frontend to the Backend.
 
+
+-----Phase 2: Intelligence & Management (Completed)
+
+Date: 11-Feb-26
+Status: Deployed / Operational
+Context: Feature Expansion & Architecture Evolution
+
+1. Overview
+While Phase 1 focused on infrastructure and data entry, Phase 2 shifted focus to data utility and active management. The application now allows users to not just log transactions, but to set targets (Goals), define limits (Budgets), and edit historical data.
+
+2. Functional Features Delivered
+
+Feature Area
+Description
+Implementation Details
+
+Composite Dashboard
+A unified "Financial Pulse" view that aggregates 5 distinct data sources into a single screen.
+Backend: Implemented individual API endpoints for specific dashboard metrics (Income, Expense, Savings, etc.) allowing modular data fetching.
+Frontend: Modular UI cards for Income/Expense, Net Worth, and Top Spends.
+
+Unified Goal & Budget Engine
+A system to track both "Savings Targets" (Accumulators) and "Expense Limits" (Thresholds) using a shared architecture.
+Logic: Implemented a 'type' flag ('SAVING' vs 'BUDGET').
+Behavior: 'SAVING' calculates lifetime contributions. 'BUDGET' calculates current-month spending against a limit.
+
+Transaction Linkage
+The ability to attribute specific transactions to broader financial goals.
+UX: Added "Goal/Budget" dropdown in the Add Transaction form.
+DB: Transactions now carry a Foreign Key linking them to parent goals.
+
+Full CRUD Operations
+Maturity of the transaction handling system.
+Users can now Edit existing transactions (fixing amounts/categories) and Delete erroneous entries, with automatic re-calculation of account balances.
+
+Financial Segmentation
+Distinct handling for non-standard transaction types.
+Loans: Tracking of EMI payments.
+Investments: Tracking of capital contributions separate from standard "Expenses."
+
+
+3. Technical Architecture Updates (Phase 2)
+
+A. Database Schema Evolution
+The centralized 'transactions' table was enhanced, and a new 'goals' entity was introduced.
+-- New Table: 'goals'
+   Fields: id, user_id, name, target_amount, current_amount, type (Enum: SAVING, BUDGET), color, icon.
+-- Modified Table: 'transactions'
+   Update: Added 'goal_id' (FK) to allow Many-to-One relationship with Goals.
+   Constraint: ON DELETE SET NULL (Preserves transaction history even if a goal is deleted).
+
+B. API Strategy:
+
+-- Endpoint: GET /api/dashboard/total-balance
+-- Endpoint: GET /api/dashboard/total-income
+-- Endpoint: GET /api/dashboard/total-expenses
+-- Endpoint: GET /api/dashboard/total-savings
+-- Endpoint: GET /api/dashboard/total-loans
+-- Endpoint: GET /api/dashboard/total-investment
+-- Payload: Individual endpoints return specific JSON objects for Balance, Income, Expenses, Savings, Loans, and Investments.
+
+C. Backend Logic (Go)
+-- ACID Compliance: Implemented database transactions to ensure that when a Transaction is added/edited, the 'current_amount' in the linked Goal/Budget is updated atomically.
+-- Budget Logic: Added specific date-range filtering to ensure "Expense Budgets" only sum up transactions from the current month (resetting logic).
+
+
+4. Phase 3 Roadmap (Next Steps)
+
+Item
+Status
+Description
+
+Visual Analytics
+Pending
+Implementation of Pie Charts for category breakdowns and Bar Charts for month-over-month comparisons.
+
+Data Export
+Pending
+Ability to generate PDF/CSV reports for external use or tax purposes.
+
+Group/Family Dashboards
+Pending
+Views for shared expenses and group savings goals.
