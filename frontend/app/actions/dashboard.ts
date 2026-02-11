@@ -1,6 +1,7 @@
 "use server";
 
 import { authOptions } from "@/lib/auth";
+import { handleInvalidTokenResponse, logoutAndRedirectToLogin, rethrowIfRedirect } from "@/lib/auth-failure";
 import { getApiUrl } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 
@@ -11,7 +12,7 @@ async function getTotalBalance(start: string , end: string) {
    const session = await getServerSession(authOptions);
    
      if (!session || !session.accessToken) {
-       return { success: false, message: "Unauthorized: Please log in." };
+       return logoutAndRedirectToLogin();
      }
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
@@ -24,6 +25,7 @@ async function getTotalBalance(start: string , end: string) {
         "Authorization": `Bearer ${session.accessToken}`,
       },
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
       console.error(`Error fetching total income: ${res.statusText}`);
@@ -35,6 +37,7 @@ async function getTotalBalance(start: string , end: string) {
  
 
   }catch(error){
+    rethrowIfRedirect(error);
     console.log(`Error fetching total income: ${error}`);
     return 0;
   }
@@ -46,7 +49,7 @@ async function getTotalIncome(start: string , end: string) {
    const session = await getServerSession(authOptions);
    
      if (!session || !session.accessToken) {
-       return { success: false, message: "Unauthorized: Please log in." };
+       return logoutAndRedirectToLogin();
      }
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
@@ -59,6 +62,7 @@ async function getTotalIncome(start: string , end: string) {
         "Authorization": `Bearer ${session.accessToken}`,
       },
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
       console.error(`Error fetching total income: ${res.statusText}`);
@@ -70,6 +74,7 @@ async function getTotalIncome(start: string , end: string) {
  
 
   }catch(error){
+    rethrowIfRedirect(error);
     console.log(`Error fetching total income: ${error}`);
     return 0;
   }
@@ -80,7 +85,7 @@ async function getTotalExpenses(start: string , end: string) {
    const session = await getServerSession(authOptions);
    
      if (!session || !session.accessToken) {
-       return { success: false, message: "Unauthorized: Please log in." };
+       return logoutAndRedirectToLogin();
      }
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
@@ -93,6 +98,7 @@ async function getTotalExpenses(start: string , end: string) {
         "Authorization": `Bearer ${session.accessToken}`,
       },
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
       console.log('url', url)
@@ -105,6 +111,7 @@ async function getTotalExpenses(start: string , end: string) {
  
 
   }catch(error){
+    rethrowIfRedirect(error);
     console.log(`Error fetching total expenses: ${error}`);
     return 0;
   }
@@ -116,7 +123,7 @@ async function getTotalInvestments(start: string , end: string) {
    const session = await getServerSession(authOptions);
    
      if (!session || !session.accessToken) {
-       return { success: false, message: "Unauthorized: Please log in." };
+       return logoutAndRedirectToLogin();
      }
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
@@ -129,6 +136,7 @@ async function getTotalInvestments(start: string , end: string) {
         "Authorization": `Bearer ${session.accessToken}`,
       },
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
       console.error(`Error fetching total investments: ${res.statusText}`);
@@ -144,6 +152,7 @@ async function getTotalInvestments(start: string , end: string) {
  
 
   }catch(error){
+    rethrowIfRedirect(error);
     console.log(`Error fetching total investments: ${error}`);
     return 0;
   }
@@ -154,7 +163,7 @@ async function getTotalLoans(start: string , end: string) {
    const session = await getServerSession(authOptions);
    
      if (!session || !session.accessToken) {
-       return { success: false, message: "Unauthorized: Please log in." };
+       return logoutAndRedirectToLogin();
      }
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
@@ -167,6 +176,7 @@ async function getTotalLoans(start: string , end: string) {
         "Authorization": `Bearer ${session.accessToken}`,
       },
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
       console.error(`Error fetching total loans: ${res.statusText}`);
@@ -179,6 +189,7 @@ async function getTotalLoans(start: string , end: string) {
  
 
   }catch(error){
+    rethrowIfRedirect(error);
     console.log(`Error fetching total loans: ${error}`);
     return 0;
   }
@@ -284,7 +295,7 @@ export async function getDashboardData() {
       { month: "May", amount: 900 },
       { month: "Jun", amount: 1700 },
     ],
-    loanDistribution: totalLoans?.Loans ? Object.keys(totalLoans?.Loans).map((loan:any) => {
+    loanDistribution: totalLoans?.Loans ? Object.keys(totalLoans?.Loans).map((loan: string) => {
 
       const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF0080", "#00FF80", "#8000FF", "#FF8000", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080", "#404040", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080"];
       const color = colors[Math.floor(Math.random() * Object.keys(totalLoans?.Loans).length)];
@@ -295,7 +306,7 @@ export async function getDashboardData() {
         fill: color,
       }
     }) : [], // handle null case
-    investmentDistribution: totalInvestments?.Investments ? Object.keys(totalInvestments?.Investments).map((investment:any) => {
+    investmentDistribution: totalInvestments?.Investments ? Object.keys(totalInvestments?.Investments).map((investment: string) => {
 
       // assign random color to each investment
       const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF0080", "#00FF80", "#8000FF", "#FF8000", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080", "#404040", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080"];
