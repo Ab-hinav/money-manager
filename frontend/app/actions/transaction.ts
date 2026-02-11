@@ -2,6 +2,7 @@
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { handleInvalidTokenResponse, logoutAndRedirectToLogin, rethrowIfRedirect } from "@/lib/auth-failure";
 import { getApiUrl } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
@@ -17,7 +18,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
   const session = await getServerSession(authOptions);
 
   if (!session || !session.accessToken) {
-    return { success: false, message: "Unauthorized: Please log in." };
+    return logoutAndRedirectToLogin();
   }
 
   // Extract data from FormData
@@ -69,6 +70,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
       },
       body: JSON.stringify(payload),
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
         const errorText = await res.text();
@@ -81,6 +83,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
 
     return { success: true, message: "Transaction added successfully" };
   } catch (error) {
+    rethrowIfRedirect(error);
     console.error("[Server Action] Error:", error);
     return { 
         success: false, 
@@ -93,7 +96,7 @@ export async function getCategories() {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.accessToken) {
-    return [];
+    return logoutAndRedirectToLogin();
   }
 
   try {
@@ -109,6 +112,7 @@ export async function getCategories() {
         "Authorization": `Bearer ${session.accessToken}`,
       },
     });
+    await handleInvalidTokenResponse(res);
 
     if (!res.ok) {
         const errorText = await res.text();
@@ -118,6 +122,7 @@ export async function getCategories() {
 
     return res.json();
   } catch (error) {
+    rethrowIfRedirect(error);
     console.error("[Server Action] Error:", error);
     return [];
   }
@@ -126,19 +131,26 @@ export async function getCategories() {
 
 export async function getFamilyOrGroups() {
   const session = await getServerSession(authOptions)
+  if (!session || !session.accessToken) {
+    return logoutAndRedirectToLogin();
+  }
+
   try {
     const res = await fetch(getApiUrl()+"/api/family", {
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${session.accessToken}`
       },
     })
+    await handleInvalidTokenResponse(res);
+
     if (!res.ok) {
         console.error("Failed to fetch family or groups status:", res.status)
         return []
     }
     return res.json()
   } catch (error) {
+    rethrowIfRedirect(error);
     console.error("Failed to fetch family or groups:", error)
     return []
   }
@@ -146,19 +158,26 @@ export async function getFamilyOrGroups() {
 
 export async function getGoals() {
   const session = await getServerSession(authOptions)
+  if (!session || !session.accessToken) {
+    return logoutAndRedirectToLogin();
+  }
+
   try {
     const res = await fetch(getApiUrl()+"/api/goals", {
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${session.accessToken}`
       },
     })
+    await handleInvalidTokenResponse(res);
+
     if (!res.ok) {
         console.error("Failed to fetch goals status:", res.status)
         return []
     }
     return res.json()
   } catch (error) {
+    rethrowIfRedirect(error);
     console.error("Failed to fetch goals:", error)
     return []
   }

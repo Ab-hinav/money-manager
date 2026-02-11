@@ -4,10 +4,11 @@ import { getApiUrl } from "./utils";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
-  pages: { signIn: "/" 
-    ,signOut: "/",
-    newUser: "/register"
-  }, // Redirect here if unauthorized
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
+    newUser: "/register",
+  },
   
   providers: [
     CredentialsProvider({
@@ -60,7 +61,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
-      // @ts-ignore
+      // @ts-expect-error - `id` is augmented in next-auth module declaration.
       session.user.id = token.id;
       return session;
     },

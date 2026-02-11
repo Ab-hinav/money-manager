@@ -62,7 +62,7 @@ export function Navbar() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => signOut()}>
+                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/login" })}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </DropdownMenuItem>
@@ -129,7 +129,7 @@ export function Navbar() {
                   <Link href="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-3 text-lg font-medium hover:text-teal-600">
                     <LayoutDashboard className="h-5 w-5" /> Dashboard
                   </Link>
-                  <Button variant="outline" className="w-full mt-4" onClick={() => { setOpen(false); signOut(); }}>
+                  <Button variant="outline" className="w-full mt-4" onClick={() => { setOpen(false); signOut({ callbackUrl: "/login" }); }}>
                     <LogOut className="mr-2 h-4 w-4" /> Log out
                   </Button>
                 </>

@@ -116,7 +116,7 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
             </div>
         )}
         <Button 
-            onClick={() => signOut()}
+            onClick={() => signOut({ callbackUrl: "/login" })}
             variant="ghost" 
             className={cn(
                 "w-full justify-start flex items-center gap-x-2 text-muted-foreground text-sm font-[500] transition-all hover:text-foreground hover:bg-accent h-auto py-4",
