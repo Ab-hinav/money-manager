@@ -65,6 +65,7 @@ const initialState = {
 export function TransactionForm({ categories = [], familyOrGroups = [], goals = [] }: TransactionFormProps) {
 
   const [state, formAction, isPending] = useActionState(createTransaction, initialState)
+  const hasFamilyOrGroups = familyOrGroups.length > 0
   
   const [selectedGoal, setSelectedGoal] = React.useState<string>("")
   
@@ -88,9 +89,9 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
     }
   }, [availableTypes, transactionType])
 
-  
-  const [selectedGroup, setSelectedGroup] = React.useState(familyOrGroups.length > 0 ? familyOrGroups[0].id : "")
-  const [scope, setScope] = React.useState("personal")
+  const [scope, setScope] = React.useState<"personal" | "family">("personal")
+  const [selectedGroup, setSelectedGroup] = React.useState(hasFamilyOrGroups ? familyOrGroups[0].id : "")
+ 
   
   // Filter categories based on transaction type
   const currentCategories = React.useMemo(() => {
@@ -121,12 +122,29 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
     }
   }, [state])
 
+  React.useEffect(() => {
+    if (!hasFamilyOrGroups) {
+      if (scope === "family") {
+        setScope("personal")
+      }
+      if (selectedGroup !== "") {
+        setSelectedGroup("")
+      }
+      return
+    }
+
+    const selectedGroupExists = familyOrGroups.some((group) => group.id === selectedGroup)
+    if (!selectedGroupExists) {
+      setSelectedGroup(familyOrGroups[0].id)
+    }
+  }, [familyOrGroups, hasFamilyOrGroups, scope, selectedGroup])
+
   const getSubmitButtonText = () => {
-    if (scope === "personal") {
+    if (scope === "personal" || !hasFamilyOrGroups) {
       return "Add Transaction"
     }
     const group = familyOrGroups.find(g => g.id === selectedGroup)
-    return group ? `Add to ${group.name}` : "Add to Group"
+    return group ? `Add to ${group.name}` : "Add Transaction"
   }
 
   const formatType = (type: string) => {
@@ -171,21 +189,32 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
           Personal
         </button>
         <button
-          onClick={() => setScope("family")}
+          onClick={() => {
+            if (hasFamilyOrGroups) {
+              setScope("family")
+            }
+          }}
+          disabled={!hasFamilyOrGroups}
           type="button"
           className={cn(
             "flex-1 py-2 text-sm font-medium rounded-full transition-all",
             scope === "family"
               ? "bg-white dark:bg-zinc-950 text-emerald-600 shadow-sm"
-              : "text-gray-500 hover:text-gray-700 dark:text-gray-400"
+              : "text-gray-500 hover:text-gray-700 dark:text-gray-400",
+            !hasFamilyOrGroups && "cursor-not-allowed opacity-50 hover:text-gray-500"
           )}
         >
           Family/Group
         </button>
       </div>
+      {!hasFamilyOrGroups && (
+        <p className="text-center text-xs text-gray-500 dark:text-gray-400">
+          No family/group found for this account.
+        </p>
+      )}
 
       {/* Group Selection - Only show if scope is family */}
-      {scope === "family" && (
+      {scope === "family" && hasFamilyOrGroups && (
         <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Select Group</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -218,7 +247,9 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
             <input type="hidden" name="type" value={transactionType} />
             <input type="hidden" name="categoryId" value={category?.id || ""} />
             <input type="hidden" name="scope" value={scope} />
-            <input type="hidden" name="groupId" value={scope === "family" ? selectedGroup : ""} />
+            {scope === "family" && selectedGroup && (
+              <input type="hidden" name="groupId" value={selectedGroup} />
+            )}
             <input type="hidden" name="goalId" value={selectedGoal} />
             <input type="hidden" name="amount" value={amount} /> {/* Controlled input mirror */}
 
