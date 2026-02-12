@@ -88,9 +88,9 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
     }
   }, [availableTypes, transactionType])
 
+  const [scope, setScope] = React.useState("personal" as "personal" | "family")
+  const [selectedGroup, setSelectedGroup] = React.useState(scope === "family"&& !!familyOrGroups && familyOrGroups.length > 0 ? familyOrGroups[0].id : "")
   
-  const [selectedGroup, setSelectedGroup] = React.useState(familyOrGroups.length > 0 ? familyOrGroups[0].id : "")
-  const [scope, setScope] = React.useState("personal")
   
   // Filter categories based on transaction type
   const currentCategories = React.useMemo(() => {
@@ -125,7 +125,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
     if (scope === "personal") {
       return "Add Transaction"
     }
-    const group = familyOrGroups.find(g => g.id === selectedGroup)
+    const group =  !!familyOrGroups && familyOrGroups.find(g => g.id === selectedGroup)
     return group ? `Add to ${group.name}` : "Add to Group"
   }
 
@@ -187,9 +187,12 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
       {/* Group Selection - Only show if scope is family */}
       {scope === "family" && (
         <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Select Group</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Select Group/Family</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {familyOrGroups.map((group) => (
+            { !!familyOrGroups && familyOrGroups.length === 0 && (
+              <p className="text-gray-500 dark:text-gray-400">No groups found</p>
+            )}
+            { !!familyOrGroups && familyOrGroups.map((group) => (
               <GroupCard
                 key={group.id}
                 icon={<span className="text-xl">{group.icon}</span>}
