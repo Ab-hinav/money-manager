@@ -218,7 +218,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
             <input type="hidden" name="type" value={transactionType} />
             <input type="hidden" name="categoryId" value={category?.id || ""} />
             <input type="hidden" name="scope" value={scope} />
-            <input type="hidden" name="groupId" value={selectedGroup} />
+            <input type="hidden" name="groupId" value={scope === "family" ? selectedGroup : ""} />
             <input type="hidden" name="goalId" value={selectedGoal} />
             <input type="hidden" name="amount" value={amount} /> {/* Controlled input mirror */}
 

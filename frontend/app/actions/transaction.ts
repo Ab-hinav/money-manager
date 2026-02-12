@@ -44,6 +44,11 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
   }
 
   // Construct Payload
+  const normalizedGroupId =
+    rawData.scope === "family" && typeof rawData.groupId === "string" && rawData.groupId.trim() !== ""
+      ? rawData.groupId
+      : null;
+
   const payload = {
     amount: parseFloat(rawData.amount as string),
     type: rawData.type,
@@ -51,7 +56,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
     date: rawData.date,
     description: rawData.description,
     scope: rawData.scope,
-    groupId: rawData.groupId,
+    groupId: normalizedGroupId,
     goalId: rawData.goalId ? parseInt(rawData.goalId as string) : null,
   };
 
