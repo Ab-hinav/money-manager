@@ -161,6 +161,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
         <button
           onClick={() => setScope("personal")}
           type="button"
+          aria-pressed={scope === "personal"}
           className={cn(
             "flex-1 py-2 text-sm font-medium rounded-full transition-all",
             scope === "personal"
@@ -173,6 +174,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
         <button
           onClick={() => setScope("family")}
           type="button"
+          aria-pressed={scope === "family"}
           className={cn(
             "flex-1 py-2 text-sm font-medium rounded-full transition-all",
             scope === "family"
@@ -233,6 +235,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
                   key={type}
                   type="button"
                   onClick={() => setTransactionType(type.toLowerCase())}
+                  aria-pressed={transactionType === type.toLowerCase()}
                   className={cn(
                     "flex-1 pb-4 text-sm font-medium transition-all relative",
                     transactionType === type.toLowerCase()
@@ -247,7 +250,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
                 </button>
               ))
               ) : (
-              <div className="p-4 text-sm text-gray-500">Loading types...</div>
+              <div role="status" className="p-4 text-sm text-gray-500">Loading types...</div>
               )}
             </div>
 
