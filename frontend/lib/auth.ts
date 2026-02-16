@@ -61,7 +61,6 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
-      // @ts-expect-error - `id` is augmented in next-auth module declaration.
       session.user.id = token.id;
       return session;
     },
