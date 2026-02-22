@@ -51,7 +51,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
     date: rawData.date,
     description: rawData.description,
     scope: rawData.scope,
-    groupId: rawData.groupId,
+    groupId: rawData.groupId ? parseInt(rawData.groupId as string) : null,
     goalId: rawData.goalId ? parseInt(rawData.goalId as string) : null,
   };
 

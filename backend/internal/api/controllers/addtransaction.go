@@ -25,7 +25,7 @@ type TransactionBody struct {
 	Date        string  `json:"date"`
 	Description string  `json:"description"`
 	Scope       string  `json:"scope"`
-	GroupId     *string `json:"groupId"`
+	GroupId     *int `json:"groupId"`
 	GoalId      *int    `json:"goalId"`
 }
 
