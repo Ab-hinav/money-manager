@@ -257,7 +257,7 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 	var totalLoans float64
 	var loans = make(map[string]float64)
 
-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT c.name, SUM(t.amount) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_LOAN, fromDate, toDate)
 	if err != nil {
@@ -271,16 +271,13 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 
 		var amount float64
 		var name string
-		if err := rows.Scan(&amount, &name); err != nil {
+		if err := rows.Scan(&name, &amount); err != nil {
 			log.Println("Database error", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
-		loans[name] += amount
-	}
-
-	for _, l := range loans {
-		totalLoans += l
+		loans[name] = amount
+		totalLoans += amount
 	}
 
 	response.TotalLoans = totalLoans
@@ -311,7 +308,7 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 	var totalInvestments float64
 	var investments = make(map[string]float64)
 
-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT c.name, SUM(t.amount) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_INVESTMENT, fromDate, toDate)
 	if err != nil {
@@ -325,16 +322,13 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 
 		var amount float64
 		var name string
-		if err := rows.Scan(&amount, &name); err != nil {
+		if err := rows.Scan(&name, &amount); err != nil {
 			log.Println("Database error", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
-		investments[name] += amount
-	}
-
-	for _, i := range investments {
-		totalInvestments += i
+		investments[name] = amount
+		totalInvestments += amount
 	}
 
 	response.TotalInvestments = totalInvestments
