@@ -73,7 +73,13 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
             )}
             </Link>
             {!collapsed && setCollapsed && (
-                <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setCollapsed(!collapsed)}
+                    aria-label="Collapse sidebar"
+                    className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground"
+                >
                     <ChevronLeft size={18} />
                 </Button>
             )}
@@ -81,7 +87,13 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
         
         {/* Collapsed toggle button when sidebar is collapsed (shown below logo or somewhere accessible) */}
         {collapsed && setCollapsed && (
-             <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="mb-4 w-full h-auto py-2 text-muted-foreground hover:text-foreground">
+             <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setCollapsed(!collapsed)}
+                aria-label="Expand sidebar"
+                className="mb-4 w-full h-auto py-2 text-muted-foreground hover:text-foreground"
+            >
                 <ChevronRight size={18} />
             </Button>
         )}
@@ -118,6 +130,8 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
         <Button 
             onClick={() => signOut({ callbackUrl: "/login" })}
             variant="ghost" 
+            aria-label="Logout"
+            title={collapsed ? "Logout" : undefined}
             className={cn(
                 "w-full justify-start flex items-center gap-x-2 text-muted-foreground text-sm font-[500] transition-all hover:text-foreground hover:bg-accent h-auto py-4",
                 collapsed ? "justify-center p-2" : "pl-6"
