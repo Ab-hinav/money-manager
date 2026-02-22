@@ -25,7 +25,7 @@ type TransactionBody struct {
 	Date        string  `json:"date"`
 	Description string  `json:"description"`
 	Scope       string  `json:"scope"`
-	GroupId     *string `json:"groupId"`
+	GroupId     *int    `json:"groupId"`
 	GoalId      *int    `json:"goalId"`
 }
 
@@ -94,9 +94,18 @@ func (h *AddTransactionHandler) AddTransaction(w http.ResponseWriter, r *http.Re
 	}
 	log.Println("Transaction Body", transaction)
 
+	// Personal transactions should never write a family_id.
+	if transaction.Scope == "" || transaction.Scope == "personal" {
+		transaction.GroupId = nil
+	}
+	if transaction.Scope == "family" && transaction.GroupId == nil {
+		http.Error(w, "groupId is required for family transactions", http.StatusBadRequest)
+		return
+	}
+
 	// insert the transaction into the database
 	query := `INSERT INTO transactions (user_id,family_id, category_id, amount, transaction_date, description,goal_id) 
-				VALUES ($1, $2, $3, $4, $5, $6,$7) RETURNING id, user_id, family_id, category_id, amount, transaction_date, description,goal_id`
+					VALUES ($1, $2, $3, $4, $5, $6,$7) RETURNING id, user_id, family_id, category_id, amount, transaction_date, description,goal_id`
 
 	var transactionResponse TransactionResponse
 	err := h.DB.QueryRow(query, userID, transaction.GroupId, transaction.CategoryId, transaction.Amount, transaction.Date,
