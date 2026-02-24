@@ -33,11 +33,18 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
     goalId: formData.get("goalId"),
   };
 
+  const scope = rawData.scope === "family" ? "family" : "personal";
+  const groupIdValue = String(rawData.groupId ?? "").trim();
+  const parsedGroupId =
+    scope === "family" && groupIdValue !== "" ? Number.parseInt(groupIdValue, 10) : null;
+
   // Basic Validation (You can enhance this with Zod)
   const errors: { [key: string]: string[] } = {};
   if (!rawData.amount) errors.amount = ["Amount is required"];
   if (!rawData.date) errors.date = ["Date is required"];
   if (!rawData.categoryId) errors.category = ["Category is required"];
+  if (scope === "family" && groupIdValue === "") errors.groupId = ["Family/Group is required"];
+  if (parsedGroupId !== null && Number.isNaN(parsedGroupId)) errors.groupId = ["Invalid Family/Group"];
   
   if (Object.keys(errors).length > 0) {
     return { success: false, message: "Validation Validation failed", errors };
@@ -50,8 +57,8 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
     categoryId: rawData.categoryId,
     date: rawData.date,
     description: rawData.description,
-    scope: rawData.scope,
-    groupId: rawData.groupId,
+    scope,
+    groupId: parsedGroupId,
     goalId: rawData.goalId ? parseInt(rawData.goalId as string) : null,
   };
 
