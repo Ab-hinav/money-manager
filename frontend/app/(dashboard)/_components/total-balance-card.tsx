@@ -13,7 +13,7 @@ export function TotalBalanceCard({ balance, change }: TotalBalanceCardProps) {
       <div className="relative z-10 flex flex-col gap-1">
         <div className="flex items-center gap-2 text-slate-300">
           <span className="text-sm font-medium">Total Balance</span>
-          <Button variant="ghost" size="icon" className="h-4 w-4 text-slate-300 hover:text-white transition-colors">
+          <Button aria-label="Toggle balance visibility" variant="ghost" size="icon" className="h-4 w-4 text-slate-300 hover:text-white transition-colors">
             <Eye className="h-4 w-4" />
           </Button>
         </div>
