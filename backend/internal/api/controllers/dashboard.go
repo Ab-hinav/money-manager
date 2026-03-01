@@ -29,7 +29,7 @@ func (h *DashboardHandler) GetTotalBalance(w http.ResponseWriter, r *http.Reques
 
 	// get categoryIds
 
-	query := `SELECT SUM(CASE WHEN type = $2 THEN amount ELSE 0 END) - SUM(CASE WHEN type = $3 THEN amount ELSE 0 END) - SUM(CASE WHEN type = $4 THEN amount ELSE 0 END) - SUM(CASE WHEN type = $5 THEN amount ELSE 0 END) - SUM(CASE WHEN type = $6 THEN amount ELSE 0 END) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND t.transaction_date BETWEEN $7 AND $8`
+	query := `SELECT COALESCE(SUM(CASE WHEN type = $2 THEN amount ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = $3 THEN amount ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = $4 THEN amount ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = $5 THEN amount ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = $6 THEN amount ELSE 0 END), 0) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND t.transaction_date BETWEEN $7 AND $8`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_INCOME, config.CATEGORY_TYPE_EXPENSE, config.CATEGORY_TYPE_LOAN, config.CATEGORY_TYPE_INVESTMENT, config.CATEGORY_TYPE_SAVINGS, fromDate, toDate)
 	if err != nil {
@@ -69,7 +69,7 @@ func (h *DashboardHandler) GetTotalIncome(w http.ResponseWriter, r *http.Request
 
 	var totalIncome float64
 
-	query := `SELECT SUM(t.amount) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT COALESCE(SUM(t.amount), 0) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_INCOME, fromDate, toDate)
 	if err != nil {
@@ -124,7 +124,7 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 
 		query := `SELECT
 		DATE_TRUNC('month', t.transaction_date) AS month,
-		SUM(t.amount) AS total_expense
+		COALESCE(SUM(t.amount), 0) AS total_expense
 		FROM transactions t
 		JOIN categories c ON c.id = t.category_id
 		WHERE c.category_type = $1
@@ -158,7 +158,7 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 	}
 	var totalExpenses float64
 
-	query := `SELECT SUM(t.amount) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT COALESCE(SUM(t.amount), 0) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_EXPENSE, fromDate, toDate)
 	if err != nil {
