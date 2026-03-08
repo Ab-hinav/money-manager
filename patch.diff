@@ -1,0 +1,65 @@
+--- backend/internal/api/controllers/dashboard.go
++++ backend/internal/api/controllers/dashboard.go
+@@ -204,7 +204,7 @@
+	var totalSavings float64
+	var savings []map[string]interface{}
+
+-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
++	query := `SELECT COALESCE(SUM(t.amount), 0), c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
+
+	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_SAVINGS, fromDate, toDate)
+	if err != nil {
+@@ -223,10 +223,7 @@
+			return
+		}
+		savings = append(savings, map[string]interface{}{"amount": amount, "name": name})
+-	}
+-
+-	for _, s := range savings {
+-		totalSavings += s["amount"].(float64)
++		totalSavings += amount
+	}
+
+	response.TotalSavings = totalSavings
+@@ -257,7 +254,7 @@
+	var totalLoans float64
+	var loans = make(map[string]float64)
+
+-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
++	query := `SELECT COALESCE(SUM(t.amount), 0), c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
+
+	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_LOAN, fromDate, toDate)
+	if err != nil {
+@@ -276,10 +273,7 @@
+			return
+		}
+		loans[name] += amount
+-	}
+-
+-	for _, l := range loans {
+-		totalLoans += l
++		totalLoans += amount
+	}
+
+	response.TotalLoans = totalLoans
+@@ -311,7 +305,7 @@
+	var totalInvestments float64
+	var investments = make(map[string]float64)
+
+-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
++	query := `SELECT COALESCE(SUM(t.amount), 0), c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
+
+	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_INVESTMENT, fromDate, toDate)
+	if err != nil {
+@@ -330,10 +324,7 @@
+			return
+		}
+		investments[name] += amount
+-	}
+-
+-	for _, i := range investments {
+-		totalInvestments += i
++		totalInvestments += amount
+	}
+
+	response.TotalInvestments = totalInvestments
