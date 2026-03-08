@@ -1,0 +1,20 @@
+--- backend/internal/api/controllers/dashboard.go
++++ backend/internal/api/controllers/dashboard.go
+@@ -69,7 +69,7 @@
+
+	var totalIncome float64
+
+-	query := `SELECT SUM(t.amount) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
++	query := `SELECT COALESCE(SUM(t.amount), 0) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+
+	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_INCOME, fromDate, toDate)
+	if err != nil {
+@@ -155,7 +155,7 @@
+	}
+	var totalExpenses float64
+
+-	query := `SELECT SUM(t.amount) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
++	query := `SELECT COALESCE(SUM(t.amount), 0) FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+
+	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_EXPENSE, fromDate, toDate)
+	if err != nil {
