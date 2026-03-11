@@ -11,7 +11,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "k3s_server" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro" # Recommended for K3s stability (~$0.04/hr)
+  instance_type = "t3.small" # Recommended for K3s stability (~$0.04/hr)
   # For strict Free Tier use "t3.micro", but K3s might OOM (Out of Memory).
 
   key_name      = "money-key" # Make sure you created this Key Pair in AWS Console!
