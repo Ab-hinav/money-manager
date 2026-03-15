@@ -124,15 +124,16 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 
 		query := `SELECT
 		DATE_TRUNC('month', t.transaction_date) AS month,
-		SUM(t.amount) AS total_expense
+		COALESCE(SUM(t.amount), 0) AS total_expense
 		FROM transactions t
 		JOIN categories c ON c.id = t.category_id
-		WHERE c.category_type = $1
-		AND t.transaction_date >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '$2 months'
+		WHERE t.user_id = $1
+		AND c.type = $2
+		AND t.transaction_date >= DATE_TRUNC('month', CURRENT_DATE) - ($3::int * INTERVAL '1 month')
 		GROUP BY 1
 		ORDER BY month;`
 
-		rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_EXPENSE, monthGap)
+		rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_EXPENSE, int(monthGap))
 		if err != nil {
 			log.Println("Database error", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)
