@@ -6,15 +6,9 @@ import { getApiUrl } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 
 
-async function getTotalBalance(start: string , end: string) {
+async function getTotalBalance(accessToken: string, start: string , end: string) {
 
   try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
-    
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-balance?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
@@ -22,7 +16,7 @@ async function getTotalBalance(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -44,14 +38,8 @@ async function getTotalBalance(start: string , end: string) {
   
 }
 
-async function getTotalIncome(start: string , end: string) {
+async function getTotalIncome(accessToken: string, start: string , end: string) {
   try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
-    
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-income?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
@@ -59,7 +47,7 @@ async function getTotalIncome(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -80,14 +68,8 @@ async function getTotalIncome(start: string , end: string) {
   }
 }
 
-async function getTotalExpenses(start: string , end: string) {
+async function getTotalExpenses(accessToken: string, start: string , end: string) {
   try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
-    
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-expenses?fromDate=${start}&toDate=${end}&monthlyData=false`;
     const res = await fetch(url, {
@@ -95,7 +77,7 @@ async function getTotalExpenses(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -118,14 +100,8 @@ async function getTotalExpenses(start: string , end: string) {
 }
 
 
-async function getTotalInvestments(start: string , end: string) {
+async function getTotalInvestments(accessToken: string, start: string , end: string) {
   try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
-    
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-investment?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
@@ -133,7 +109,7 @@ async function getTotalInvestments(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -158,14 +134,8 @@ async function getTotalInvestments(start: string , end: string) {
   }
 }
 
-async function getTotalLoans(start: string , end: string) {
+async function getTotalLoans(accessToken: string, start: string , end: string) {
   try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
-    
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-loans?fromDate=${start}&toDate=${end}`;
     const res = await fetch(url, {
@@ -173,7 +143,7 @@ async function getTotalLoans(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -198,6 +168,12 @@ async function getTotalLoans(start: string , end: string) {
 
 
 export async function getDashboardData() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.accessToken) {
+    return logoutAndRedirectToLogin();
+  }
+
   // Simulate delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -212,12 +188,16 @@ export async function getDashboardData() {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
   }
 
+  const accessToken = session.accessToken;
+  const startOfMonth = getStartOfMonth();
+  const endOfMonth = getEndOfMonth();
+
   const [totalBalance , totalIncome , totalExpenses , totalInvestments, totalLoans] = await Promise.all([
-    getTotalBalance(getStartOfMonth(), getEndOfMonth()),
-    getTotalIncome(getStartOfMonth(), getEndOfMonth()),
-    getTotalExpenses(getStartOfMonth(), getEndOfMonth()),
-    getTotalInvestments(getStartOfMonth(), getEndOfMonth()),
-    getTotalLoans(getStartOfMonth(), getEndOfMonth()),
+    getTotalBalance(accessToken, startOfMonth, endOfMonth),
+    getTotalIncome(accessToken, startOfMonth, endOfMonth),
+    getTotalExpenses(accessToken, startOfMonth, endOfMonth),
+    getTotalInvestments(accessToken, startOfMonth, endOfMonth),
+    getTotalLoans(accessToken, startOfMonth, endOfMonth),
   ])
 
   return {
