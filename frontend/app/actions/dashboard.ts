@@ -295,25 +295,24 @@ export async function getDashboardData() {
       { month: "May", amount: 900 },
       { month: "Jun", amount: 1700 },
     ],
-    loanDistribution: totalLoans?.Loans ? Object.keys(totalLoans?.Loans).map((loan: string) => {
+    loanDistribution: totalLoans?.loans ? Object.keys(totalLoans?.loans).map((loan: string, index: number) => {
 
-      const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF0080", "#00FF80", "#8000FF", "#FF8000", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080", "#404040", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080"];
-      const color = colors[Math.floor(Math.random() * Object.keys(totalLoans?.Loans).length)];
+      const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF0080", "#00FF80", "#8000FF", "#FF8000", "#808080", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080"];
+      const color = colors[index % colors.length];
 
       return {
         name: loan,
-        value: totalLoans?.Loans[loan],
+        value: totalLoans?.loans[loan],
         fill: color,
       }
     }) : [], // handle null case
-    investmentDistribution: totalInvestments?.Investments ? Object.keys(totalInvestments?.Investments).map((investment: string) => {
+    investmentDistribution: totalInvestments?.investments ? Object.keys(totalInvestments?.investments).map((investment: string, index: number) => {
 
-      // assign random color to each investment
-      const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF0080", "#00FF80", "#8000FF", "#FF8000", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080", "#404040", "#808080", "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#FF8080", "#80FF80", "#8080FF", "#FFFF80", "#FF80FF", "#80FFFF", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080"];
-      const color = colors[Math.floor(Math.random() * Object.keys(totalInvestments?.Investments).length)];
+      const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF0080", "#00FF80", "#8000FF", "#FF8000", "#808080", "#804000", "#008040", "#400080", "#804040", "#408040", "#404080", "#808040", "#804080", "#408080"];
+      const color = colors[index % colors.length];
       return {
         name: investment,
-        value: totalInvestments?.Investments[investment],
+        value: totalInvestments?.investments[investment],
         fill: color,
       };
     }) : []

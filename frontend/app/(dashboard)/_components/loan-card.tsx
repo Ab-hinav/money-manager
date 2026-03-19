@@ -40,9 +40,9 @@ export function LoanCard({ data }: LoanCardProps) {
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
-              <Tooltip 
-                formatter={(value: number | undefined) => [
-                  value !== undefined ? `₹${value.toLocaleString("en-IN")}` : "N/A", 
+              <Tooltip
+                formatter={(value) => [
+                  typeof value === "number" ? `₹${value.toLocaleString("en-IN")}` : String(value ?? "N/A"),
                   "Amount"
                 ]}
                 contentStyle={{ 

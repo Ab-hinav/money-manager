@@ -37,6 +37,11 @@ func (h *GoalHandler) GetGoals(w http.ResponseWriter, r *http.Request) {
 		}
 		goals = append(goals, g)
 	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(goals)

@@ -68,15 +68,20 @@ func (h *AddTransactionHandler) GetCategoriesData(w http.ResponseWriter, r *http
 		categories = append(categories, category)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(categories)
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
 
 	if len(categories) == 0 {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(categories)
 	log.Println("Categories Data", categories)
 }
 
@@ -107,7 +112,7 @@ func (h *AddTransactionHandler) AddTransaction(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	log.Println("Transaction added successfully")
 	json.NewEncoder(w).Encode(transactionResponse)
 
