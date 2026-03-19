@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/Ab-hinav/money-manager/internal/config"
 	"github.com/Ab-hinav/money-manager/internal/utils"
@@ -22,6 +21,11 @@ func (h *DashboardHandler) GetTotalBalance(w http.ResponseWriter, r *http.Reques
 	// read month and year from query params
 	toDate := r.URL.Query().Get("toDate")
 	fromDate := r.URL.Query().Get("fromDate")
+
+	if !utils.DateValidation(fromDate, toDate) {
+		http.Error(w, "Invalid date range", http.StatusBadRequest)
+		return
+	}
 
 	var totalBalance float64
 
@@ -45,6 +49,11 @@ func (h *DashboardHandler) GetTotalBalance(w http.ResponseWriter, r *http.Reques
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
+	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -86,6 +95,11 @@ func (h *DashboardHandler) GetTotalIncome(w http.ResponseWriter, r *http.Request
 			return
 		}
 	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(totalIncome)
@@ -95,7 +109,6 @@ func (h *DashboardHandler) GetTotalIncome(w http.ResponseWriter, r *http.Request
 func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Request) {
 
 	userID := r.Context().Value("user_id").(int)
-	loc, _ := time.LoadLocation("Asia/Kolkata")
 
 	toDate := r.URL.Query().Get("toDate")
 	fromDate := r.URL.Query().Get("fromDate")
@@ -115,11 +128,6 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 
 	if monthlyDataBool {
 
-		t, _ := time.ParseInLocation("02-01-2006", toDate, loc)
-		f, _ := time.ParseInLocation("02-01-2006", fromDate, loc)
-
-		monthGap := t.Month() - f.Month()
-
 		var expenses []map[string]interface{}
 
 		query := `SELECT
@@ -127,12 +135,13 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 		SUM(t.amount) AS total_expense
 		FROM transactions t
 		JOIN categories c ON c.id = t.category_id
-		WHERE c.category_type = $1
-		AND t.transaction_date >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '$2 months'
+		WHERE t.user_id = $1
+		AND c.type = $2
+		AND t.transaction_date BETWEEN $3 AND $4
 		GROUP BY 1
 		ORDER BY month;`
 
-		rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_EXPENSE, monthGap)
+		rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_EXPENSE, fromDate, toDate)
 		if err != nil {
 			log.Println("Database error", err)
 			http.Error(w, "Database error", http.StatusInternalServerError)
@@ -149,6 +158,11 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 				return
 			}
 			expenses = append(expenses, map[string]interface{}{"month": month, "totalExpense": totalExpense})
+		}
+		if err := rows.Err(); err != nil {
+			log.Println("Rows iteration error", err)
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			return
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -175,6 +189,11 @@ func (h *DashboardHandler) GetTotalExpenses(w http.ResponseWriter, r *http.Reque
 			return
 		}
 	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(totalExpenses)
@@ -197,8 +216,8 @@ func (h *DashboardHandler) GetTotalSavings(w http.ResponseWriter, r *http.Reques
 	}
 
 	var response struct {
-		TotalSavings float64
-		Savings      []map[string]interface{}
+		TotalSavings float64                  `json:"totalSavings"`
+		Savings      []map[string]interface{} `json:"savings"`
 	}
 
 	var totalSavings float64
@@ -223,6 +242,11 @@ func (h *DashboardHandler) GetTotalSavings(w http.ResponseWriter, r *http.Reques
 			return
 		}
 		savings = append(savings, map[string]interface{}{"amount": amount, "name": name})
+	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
 	}
 
 	for _, s := range savings {
@@ -250,8 +274,8 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 	}
 
 	var response struct {
-		TotalLoans float64
-		Loans      map[string]float64
+		TotalLoans float64            `json:"totalLoans"`
+		Loans      map[string]float64 `json:"loans"`
 	}
 
 	var totalLoans float64
@@ -277,6 +301,11 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 			return
 		}
 		loans[name] += amount
+	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
 	}
 
 	for _, l := range loans {
@@ -304,8 +333,8 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 	}
 
 	var response struct {
-		TotalInvestments float64
-		Investments      map[string]float64
+		TotalInvestments float64            `json:"totalInvestments"`
+		Investments      map[string]float64 `json:"investments"`
 	}
 
 	var totalInvestments float64
@@ -331,6 +360,11 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 			return
 		}
 		investments[name] += amount
+	}
+	if err := rows.Err(); err != nil {
+		log.Println("Rows iteration error", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
 	}
 
 	for _, i := range investments {

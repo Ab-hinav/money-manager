@@ -136,7 +136,6 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
   const resetForm = () => {
     setAmount("")
     setDate("")
-    setDate("")
     setDescription("")
     setSelectedGoal("")
     // Reset category to first available if exists

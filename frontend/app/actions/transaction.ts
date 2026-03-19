@@ -40,7 +40,7 @@ export async function createTransaction(prevState: ActionState, formData: FormDa
   if (!rawData.categoryId) errors.category = ["Category is required"];
   
   if (Object.keys(errors).length > 0) {
-    return { success: false, message: "Validation Validation failed", errors };
+    return { success: false, message: "Validation failed", errors };
   }
 
   // Construct Payload
