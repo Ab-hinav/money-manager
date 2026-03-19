@@ -28,6 +28,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Loader2, CheckCircle2, XCircle } from "lucide-react"
+import { CreateGroupDialog } from "./create-group-dialog"
 
 export type Category = {
   id: string
@@ -89,7 +90,14 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
   }, [availableTypes, transactionType])
 
   const [scope, setScope] = React.useState("personal" as "personal" | "family")
-  const [selectedGroup, setSelectedGroup] = React.useState(scope === "family"&& !!familyOrGroups && familyOrGroups.length > 0 ? familyOrGroups[0].id : "")
+  const [groups, setGroups] = React.useState<FamilyOrGroup[]>(familyOrGroups)
+  const [selectedGroup, setSelectedGroup] = React.useState(scope === "family"&& !!groups && groups.length > 0 ? groups[0].id : "")
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = React.useState(false)
+
+  const handleGroupCreated = React.useCallback((newGroup: FamilyOrGroup) => {
+    setGroups(prev => [...prev, newGroup])
+    setSelectedGroup(newGroup.id)
+  }, [])
   
   
   // Filter categories based on transaction type
@@ -125,7 +133,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
     if (scope === "personal") {
       return "Add Transaction"
     }
-    const group =  !!familyOrGroups && familyOrGroups.find(g => g.id === selectedGroup)
+    const group =  !!groups && groups.find(g => g.id === selectedGroup)
     return group ? `Add to ${group.name}` : "Add to Group"
   }
 
@@ -188,10 +196,10 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
         <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Select Group/Family</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            { !!familyOrGroups && familyOrGroups.length === 0 && (
+            { !!groups && groups.length === 0 && (
               <p className="text-gray-500 dark:text-gray-400">No groups found</p>
             )}
-            { !!familyOrGroups && familyOrGroups.map((group) => (
+            { !!groups && groups.map((group) => (
               <GroupCard
                 key={group.id}
                 icon={<span className="text-xl">{group.icon}</span>}
@@ -202,7 +210,7 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
                 color="bg-emerald-100 text-emerald-600"
               />
             ))}
-            <button type="button" className="flex flex-col items-center justify-center h-full min-h-[120px] rounded-xl border-2 border-dashed border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 transition-colors group">
+            <button type="button" onClick={() => setIsCreateGroupOpen(true)} className="flex flex-col items-center justify-center h-full min-h-[120px] rounded-xl border-2 border-dashed border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 transition-colors group">
               <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
                 <Plus className="w-5 h-5 text-gray-400 group-hover:text-emerald-600" />
               </div>
@@ -437,6 +445,12 @@ export function TransactionForm({ categories = [], familyOrGroups = [], goals = 
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <CreateGroupDialog
+        open={isCreateGroupOpen}
+        onOpenChange={setIsCreateGroupOpen}
+        onGroupCreated={handleGroupCreated}
+      />
     </div>
   )
 }
