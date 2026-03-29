@@ -6,14 +6,8 @@ import { getApiUrl } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 
 
-async function getTotalBalance(start: string , end: string) {
-
-  try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
+async function getTotalBalance(start: string, end: string, accessToken: string) {
+  try {
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-balance?fromDate=${start}&toDate=${end}`;
@@ -22,7 +16,7 @@ async function getTotalBalance(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -44,13 +38,8 @@ async function getTotalBalance(start: string , end: string) {
   
 }
 
-async function getTotalIncome(start: string , end: string) {
-  try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
+async function getTotalIncome(start: string, end: string, accessToken: string) {
+  try {
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-income?fromDate=${start}&toDate=${end}`;
@@ -59,7 +48,7 @@ async function getTotalIncome(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -80,13 +69,8 @@ async function getTotalIncome(start: string , end: string) {
   }
 }
 
-async function getTotalExpenses(start: string , end: string) {
-  try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
+async function getTotalExpenses(start: string, end: string, accessToken: string) {
+  try {
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-expenses?fromDate=${start}&toDate=${end}&monthlyData=false`;
@@ -95,7 +79,7 @@ async function getTotalExpenses(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -118,13 +102,8 @@ async function getTotalExpenses(start: string , end: string) {
 }
 
 
-async function getTotalInvestments(start: string , end: string) {
-  try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
+async function getTotalInvestments(start: string, end: string, accessToken: string) {
+  try {
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-investment?fromDate=${start}&toDate=${end}`;
@@ -133,7 +112,7 @@ async function getTotalInvestments(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -158,13 +137,8 @@ async function getTotalInvestments(start: string , end: string) {
   }
 }
 
-async function getTotalLoans(start: string , end: string) {
-  try{
-   const session = await getServerSession(authOptions);
-   
-     if (!session || !session.accessToken) {
-       return logoutAndRedirectToLogin();
-     }
+async function getTotalLoans(start: string, end: string, accessToken: string) {
+  try {
     
     const backendUrl = getApiUrl(); // On server, this uses internal URL
     const url = `${backendUrl}/api/dashboard/total-loans?fromDate=${start}&toDate=${end}`;
@@ -173,7 +147,7 @@ async function getTotalLoans(start: string , end: string) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
     await handleInvalidTokenResponse(res);
@@ -201,6 +175,12 @@ export async function getDashboardData() {
   // Simulate delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
+  const session = await getServerSession(authOptions);
+  if (!session || !session.accessToken) {
+    return logoutAndRedirectToLogin();
+  }
+  const accessToken = session.accessToken;
+
   //like 01-01-2024
   const getStartOfMonth = () => {
     const date = new Date();
@@ -213,11 +193,11 @@ export async function getDashboardData() {
   }
 
   const [totalBalance , totalIncome , totalExpenses , totalInvestments, totalLoans] = await Promise.all([
-    getTotalBalance(getStartOfMonth(), getEndOfMonth()),
-    getTotalIncome(getStartOfMonth(), getEndOfMonth()),
-    getTotalExpenses(getStartOfMonth(), getEndOfMonth()),
-    getTotalInvestments(getStartOfMonth(), getEndOfMonth()),
-    getTotalLoans(getStartOfMonth(), getEndOfMonth()),
+    getTotalBalance(getStartOfMonth(), getEndOfMonth(), accessToken),
+    getTotalIncome(getStartOfMonth(), getEndOfMonth(), accessToken),
+    getTotalExpenses(getStartOfMonth(), getEndOfMonth(), accessToken),
+    getTotalInvestments(getStartOfMonth(), getEndOfMonth(), accessToken),
+    getTotalLoans(getStartOfMonth(), getEndOfMonth(), accessToken),
   ])
 
   return {
