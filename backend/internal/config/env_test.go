@@ -32,3 +32,41 @@ func TestGetJWTKey(t *testing.T) {
 		GetJWTKey()
 	})
 }
+
+func TestGetJWTExpiry(t *testing.T) {
+	// Reset state
+	ResetJWTExpiry()
+
+	t.Run("Default Value", func(t *testing.T) {
+		ResetJWTExpiry()
+		os.Unsetenv("JWT_EXPIRY")
+
+		val := GetJWTExpiry()
+		if val != 6 {
+			t.Errorf("expected default 6, got %d", val)
+		}
+	})
+
+	t.Run("Custom Value", func(t *testing.T) {
+		ResetJWTExpiry()
+		expected := 12
+		os.Setenv("JWT_EXPIRY", "12")
+		defer os.Unsetenv("JWT_EXPIRY")
+
+		val := GetJWTExpiry()
+		if val != expected {
+			t.Errorf("expected %d, got %d", expected, val)
+		}
+	})
+
+	t.Run("Invalid Value", func(t *testing.T) {
+		ResetJWTExpiry()
+		os.Setenv("JWT_EXPIRY", "invalid")
+		defer os.Unsetenv("JWT_EXPIRY")
+
+		val := GetJWTExpiry()
+		if val != 6 {
+			t.Errorf("expected default 6 for invalid input, got %d", val)
+		}
+	})
+}

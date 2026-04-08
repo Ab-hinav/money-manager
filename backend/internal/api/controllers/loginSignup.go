@@ -12,7 +12,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/Ab-hinav/money-manager/internal/config"
-	"github.com/Ab-hinav/money-manager/internal/utils"
 )
 
 type AuthHandler struct {
@@ -63,7 +62,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 3. Generate JWT Token
-	expirationTime := time.Now().Add(time.Duration(utils.GetEnvInt("JWT_EXPIRY", 6)) * time.Hour)
+	expirationTime := time.Now().Add(time.Duration(config.GetJWTExpiry()) * time.Hour)
 	claims := &Claims{
 		Email:  creds.Email,
 		UserID: userID,
