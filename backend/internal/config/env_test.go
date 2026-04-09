@@ -2,17 +2,21 @@ package config
 
 import (
 	"os"
+	"sync"
 	"testing"
 )
 
+// resetJWTKey resets the singleton for testing purposes
+func resetJWTKey() {
+	jwtKey = nil
+	jwtOnce = sync.Once{}
+}
+
 func TestGetJWTKey(t *testing.T) {
-	// 1. Test when JWT_SECRET is set
 	expected := "test_secret"
-	os.Setenv("JWT_SECRET", expected)
-	// We defer unset here in case panic happens before, but for the first test block it's fine.
-	// Actually better structure:
 
 	t.Run("Valid Secret", func(t *testing.T) {
+		resetJWTKey()
 		os.Setenv("JWT_SECRET", expected)
 		defer os.Unsetenv("JWT_SECRET")
 
@@ -23,6 +27,7 @@ func TestGetJWTKey(t *testing.T) {
 	})
 
 	t.Run("Missing Secret", func(t *testing.T) {
+		resetJWTKey()
 		os.Unsetenv("JWT_SECRET")
 		defer func() {
 			if r := recover(); r == nil {
@@ -30,5 +35,30 @@ func TestGetJWTKey(t *testing.T) {
 			}
 		}()
 		GetJWTKey()
+	})
+
+	t.Run("Missing Secret Persistence", func(t *testing.T) {
+		resetJWTKey()
+		os.Unsetenv("JWT_SECRET")
+
+		// First call panics
+		func() {
+			defer func() {
+				if r := recover(); r == nil {
+					t.Errorf("First call did not panic")
+				}
+			}()
+			GetJWTKey()
+		}()
+
+		// Second call should ALSO panic
+		func() {
+			defer func() {
+				if r := recover(); r == nil {
+					t.Errorf("Second call did not panic")
+				}
+			}()
+			GetJWTKey()
+		}()
 	})
 }
