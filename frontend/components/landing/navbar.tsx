@@ -138,7 +138,7 @@ export function Navbar() {
                     <Button variant="outline" asChild className="w-full" onClick={() => setOpen(false)}>
                       <Link href="/login">Log in</Link>
                     </Button>
-                    <Button className="bg-teal-600 hover:bg-teal-700 text-white w-full" onClick={() => setOpen(false)}>
+                    <Button className="bg-teal-600 hover:bg-teal-700 text-white w-full" asChild onClick={() => setOpen(false)}>
                       <Link href="/register">Sign Up</Link>
                     </Button>
                 </div>
