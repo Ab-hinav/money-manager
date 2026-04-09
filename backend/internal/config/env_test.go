@@ -6,13 +6,12 @@ import (
 )
 
 func TestGetJWTKey(t *testing.T) {
-	// 1. Test when JWT_SECRET is set
 	expected := "test_secret"
-	os.Setenv("JWT_SECRET", expected)
-	// We defer unset here in case panic happens before, but for the first test block it's fine.
-	// Actually better structure:
 
 	t.Run("Valid Secret", func(t *testing.T) {
+		ResetJWTKey()
+		defer ResetJWTKey()
+
 		os.Setenv("JWT_SECRET", expected)
 		defer os.Unsetenv("JWT_SECRET")
 
@@ -23,6 +22,9 @@ func TestGetJWTKey(t *testing.T) {
 	})
 
 	t.Run("Missing Secret", func(t *testing.T) {
+		ResetJWTKey()
+		defer ResetJWTKey()
+
 		os.Unsetenv("JWT_SECRET")
 		defer func() {
 			if r := recover(); r == nil {

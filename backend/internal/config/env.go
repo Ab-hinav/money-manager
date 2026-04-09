@@ -3,17 +3,32 @@ package config
 import (
 	"log"
 	"os"
+	"sync"
+)
+
+var (
+	jwtSecret []byte
+	jwtOnce   sync.Once
 )
 
 // GetJWTKey retrieves the JWT_SECRET from the environment.
 // It ensures the key is not empty to prevent insecure token signing.
 func GetJWTKey() []byte {
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		// Critical security failure: Do not allow operation without a secret.
-		// Panic will be caught by middleware.Recoverer, returning 500 to client.
-		log.Println("CRITICAL: JWT_SECRET is not set in environment")
-		panic("JWT_SECRET is not set")
-	}
-	return []byte(secret)
+	jwtOnce.Do(func() {
+		secret := os.Getenv("JWT_SECRET")
+		if secret == "" {
+			// Critical security failure: Do not allow operation without a secret.
+			// Panic will be caught by middleware.Recoverer, returning 500 to client.
+			log.Println("CRITICAL: JWT_SECRET is not set in environment")
+			panic("JWT_SECRET is not set")
+		}
+		jwtSecret = []byte(secret)
+	})
+	return jwtSecret
+}
+
+// ResetJWTKey resets the JWT key cache. This is intended for testing purposes only.
+func ResetJWTKey() {
+	jwtSecret = nil
+	jwtOnce = sync.Once{}
 }
