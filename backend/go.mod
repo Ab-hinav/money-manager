@@ -12,4 +12,7 @@ require (
 
 require github.com/joho/godotenv v1.5.1
 
-require github.com/google/uuid v1.6.0 // indirect
+require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+)
