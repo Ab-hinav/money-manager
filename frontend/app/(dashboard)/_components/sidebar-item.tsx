@@ -30,6 +30,8 @@ export const SidebarItem = ({
         isActive && "text-teal-600 bg-teal-500/10 hover:bg-teal-500/10 hover:text-teal-600",
         collapsed ? "justify-center p-2" : "pl-6"
       )}
+      aria-label={collapsed ? label : undefined}
+      title={collapsed ? label : undefined}
     >
       <div className="flex items-center gap-x-2 py-4">
         <Icon size={22} className={cn(
