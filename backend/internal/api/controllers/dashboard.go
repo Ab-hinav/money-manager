@@ -223,7 +223,7 @@ func (h *DashboardHandler) GetTotalSavings(w http.ResponseWriter, r *http.Reques
 	var totalSavings float64
 	var savings []map[string]interface{}
 
-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT COALESCE(SUM(t.amount), 0), c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_SAVINGS, fromDate, toDate)
 	if err != nil {
@@ -241,16 +241,13 @@ func (h *DashboardHandler) GetTotalSavings(w http.ResponseWriter, r *http.Reques
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
+		totalSavings += amount
 		savings = append(savings, map[string]interface{}{"amount": amount, "name": name})
 	}
 	if err := rows.Err(); err != nil {
 		log.Println("Rows iteration error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	for _, s := range savings {
-		totalSavings += s["amount"].(float64)
 	}
 
 	response.TotalSavings = totalSavings
@@ -281,7 +278,7 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 	var totalLoans float64
 	var loans = make(map[string]float64)
 
-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT COALESCE(SUM(t.amount), 0), c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_LOAN, fromDate, toDate)
 	if err != nil {
@@ -300,16 +297,13 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
-		loans[name] += amount
+		loans[name] = amount
+		totalLoans += amount
 	}
 	if err := rows.Err(); err != nil {
 		log.Println("Rows iteration error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	for _, l := range loans {
-		totalLoans += l
 	}
 
 	response.TotalLoans = totalLoans
@@ -340,7 +334,7 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 	var totalInvestments float64
 	var investments = make(map[string]float64)
 
-	query := `SELECT t.amount,c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4`
+	query := `SELECT COALESCE(SUM(t.amount), 0), c.name FROM transactions t JOIN categories c ON c.id = t.category_id WHERE t.user_id = $1 AND c.type = $2 AND t.transaction_date BETWEEN $3 AND $4 GROUP BY c.name`
 
 	rows, err := h.DB.Query(query, userID, config.CATEGORY_TYPE_INVESTMENT, fromDate, toDate)
 	if err != nil {
@@ -359,16 +353,13 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return
 		}
-		investments[name] += amount
+		investments[name] = amount
+		totalInvestments += amount
 	}
 	if err := rows.Err(); err != nil {
 		log.Println("Rows iteration error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	for _, i := range investments {
-		totalInvestments += i
 	}
 
 	response.TotalInvestments = totalInvestments
