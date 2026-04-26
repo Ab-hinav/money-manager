@@ -25,6 +25,8 @@ export const SidebarItem = ({
   return (
     <Link
       href={href}
+      title={collapsed ? label : undefined}
+      aria-label={collapsed ? label : undefined}
       className={cn(
         "flex items-center gap-x-2 text-muted-foreground text-sm font-[500] transition-all hover:text-foreground hover:bg-accent",
         isActive && "text-teal-600 bg-teal-500/10 hover:bg-teal-500/10 hover:text-teal-600",
