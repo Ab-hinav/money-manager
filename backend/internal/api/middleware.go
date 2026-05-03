@@ -36,6 +36,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		// 3. Parse & Validate Token
 		claims := &Claims{}
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+			// Don't forget to validate the alg is what you expect:
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, jwt.ErrSignatureInvalid
+			}
 			return config.GetJWTKey(), nil
 		})
 
