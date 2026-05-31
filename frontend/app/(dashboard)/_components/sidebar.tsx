@@ -73,7 +73,7 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
             )}
             </Link>
             {!collapsed && setCollapsed && (
-                <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground" aria-label="Collapse sidebar" title="Collapse sidebar" aria-expanded="true">
                     <ChevronLeft size={18} />
                 </Button>
             )}
@@ -81,7 +81,7 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
         
         {/* Collapsed toggle button when sidebar is collapsed (shown below logo or somewhere accessible) */}
         {collapsed && setCollapsed && (
-             <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="mb-4 w-full h-auto py-2 text-muted-foreground hover:text-foreground">
+             <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="mb-4 w-full h-auto py-2 text-muted-foreground hover:text-foreground" aria-label="Expand sidebar" title="Expand sidebar" aria-expanded="false">
                 <ChevronRight size={18} />
             </Button>
         )}
