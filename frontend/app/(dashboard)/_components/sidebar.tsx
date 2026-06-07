@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, PlusCircle, BarChart3, Settings } from "lucide-react";
@@ -73,7 +72,7 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
             )}
             </Link>
             {!collapsed && setCollapsed && (
-                <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground" aria-label="Collapse sidebar" title="Collapse sidebar" aria-expanded="true">
                     <ChevronLeft size={18} />
                 </Button>
             )}
@@ -81,7 +80,7 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
         
         {/* Collapsed toggle button when sidebar is collapsed (shown below logo or somewhere accessible) */}
         {collapsed && setCollapsed && (
-             <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="mb-4 w-full h-auto py-2 text-muted-foreground hover:text-foreground">
+             <Button variant="ghost" size="icon" onClick={() => setCollapsed(!collapsed)} className="mb-4 w-full h-auto py-2 text-muted-foreground hover:text-foreground" aria-label="Expand sidebar" title="Expand sidebar" aria-expanded="false">
                 <ChevronRight size={18} />
             </Button>
         )}
@@ -122,6 +121,8 @@ export const Sidebar = ({ collapsed = false, setCollapsed }: SidebarProps) => {
                 "w-full justify-start flex items-center gap-x-2 text-muted-foreground text-sm font-[500] transition-all hover:text-foreground hover:bg-accent h-auto py-4",
                 collapsed ? "justify-center p-2" : "pl-6"
             )}
+            aria-label={collapsed ? "Logout" : undefined}
+            title={collapsed ? "Logout" : undefined}
         >
             <LogOut className={cn("h-[22px] w-[22px]", !collapsed && "mr-0")} />
             {!collapsed && "Logout"}
