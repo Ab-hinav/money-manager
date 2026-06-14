@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -36,6 +37,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		// 3. Parse & Validate Token
 		claims := &Claims{}
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+			// 🛡️ Sentinel: Verify signing method to prevent JWT algorithm confusion vulnerability
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
 			return config.GetJWTKey(), nil
 		})
 
