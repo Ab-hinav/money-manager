@@ -242,15 +242,13 @@ func (h *DashboardHandler) GetTotalSavings(w http.ResponseWriter, r *http.Reques
 			return
 		}
 		savings = append(savings, map[string]interface{}{"amount": amount, "name": name})
+		// ⚡ Bolt: Calculate total within primary loop to avoid O(N) secondary iteration and type assertions
+		totalSavings += amount
 	}
 	if err := rows.Err(); err != nil {
 		log.Println("Rows iteration error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	for _, s := range savings {
-		totalSavings += s["amount"].(float64)
 	}
 
 	response.TotalSavings = totalSavings
@@ -301,15 +299,13 @@ func (h *DashboardHandler) GetTotalLoans(w http.ResponseWriter, r *http.Request)
 			return
 		}
 		loans[name] += amount
+		// ⚡ Bolt: Calculate total within primary loop to avoid O(N) secondary iteration
+		totalLoans += amount
 	}
 	if err := rows.Err(); err != nil {
 		log.Println("Rows iteration error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	for _, l := range loans {
-		totalLoans += l
 	}
 
 	response.TotalLoans = totalLoans
@@ -360,15 +356,13 @@ func (h *DashboardHandler) GetTotalInvestments(w http.ResponseWriter, r *http.Re
 			return
 		}
 		investments[name] += amount
+		// ⚡ Bolt: Calculate total within primary loop to avoid O(N) secondary iteration
+		totalInvestments += amount
 	}
 	if err := rows.Err(); err != nil {
 		log.Println("Rows iteration error", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
-	}
-
-	for _, i := range investments {
-		totalInvestments += i
 	}
 
 	response.TotalInvestments = totalInvestments
