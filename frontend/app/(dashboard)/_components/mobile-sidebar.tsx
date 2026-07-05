@@ -26,8 +26,8 @@ export const MobileSidebar = () => {
 
   return (
     <Sheet>
-      <SheetTrigger>
-        <Menu className="md:hidden" />
+      <SheetTrigger className="md:hidden" aria-label="Open mobile menu">
+        <Menu />
       </SheetTrigger>
       <SheetContent side="left" className="p-0 bg-background">
         <SheetHeader>
